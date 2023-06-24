@@ -206,3 +206,37 @@ def make_move(board: int, move: int) -> int:
 
     if castling:
         pass
+
+def generate_positions():
+
+    # Loop through bitboards of a player
+    for i, bitboard in enumerate(side[T]):
+
+        # Loop through pieces of a bitboard
+        while bitboard:
+
+            source_square = bitboard & -bitboard
+            bitboard &= ~source_square
+
+            # Loop through moves of a piece
+            for d in directions[i]:
+
+                # Loop only though inside the board
+                for k in range_of_steps[(d, source_square)]:
+
+                    target_square = 1 << (d * k)
+
+                    # Check if the target square is not a friendly piece
+                    if target_square & O[S]:
+                        break
+                    
+                    # Check if the move is a capture
+                    if target_square & O[S + 1]:
+                        childs.append()
+                        break
+
+                    childs.append()  
+                    
+                    # Stop leapers from sliding
+                    if i > 2:
+                        break
