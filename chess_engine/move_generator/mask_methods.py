@@ -64,3 +64,46 @@ def mask_pawn_attacks(square: int, player: int) -> int:
         if (r < 13) & (f > 0 ): mask ^= (1 << square + 13) # Up-Left
 
     return mask
+
+def mask_rook_attacks(square: int) -> int:
+    """
+    Generates a bitboard representing the possible rook attacks from a given square on a chess board.
+    """
+
+    mask = 0
+
+    r = square // 14 # rank
+    f = square % 14  # file
+
+    for d in range(1, 13 - r): mask ^= (1 << square + d * 14) # Up-Direction
+    for d in range(1,      r): mask ^= (1 << square - d * 14) # Down-Direction
+    for d in range(1, 13 - f): mask ^= (1 << square + d     ) # Right-Direction
+    for d in range(1,      f): mask ^= (1 << square - d     ) # Left-Direction
+
+    return mask
+
+def mask_bishop_attacks(square: int) -> int:
+    """
+    Generates a bitboard representing the possible bishop attacks from a given square on a chess board.
+    """
+
+    mask = 0
+
+    r = square // 14 # rank
+    f = square % 14  # file
+
+    for d in range(1, min(13 - r,13 - f)): mask ^= (1 << square + d * 15) # Up-Right Direction
+    for d in range(1, min(     r,     f)): mask ^= (1 << square - d * 15) # Down-Left Direction
+    for d in range(1, min(13 - r,     f)): mask ^= (1 << square + d * 13) # Up-Left Direction
+    for d in range(1, min(     r,13 - f)): mask ^= (1 << square - d * 13) # Down-Right Direction
+
+    return mask
+
+def mask_queen_attacks(square: int) -> int:
+    """
+    Generates a bitboard representing the possible queen attacks from a given square on a chess board.
+    """
+
+    mask = mask_rook_attacks(square) ^ mask_bishop_attacks(square)
+
+    return mask
