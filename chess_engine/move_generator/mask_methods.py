@@ -1,5 +1,3 @@
-# ////////////////////  learper pieces //////////////////// #
-
 def mask_king_attacks(square: int) -> int:
     """
     Generates a bitboard representing the possible king attacks from a given square on a chess board.
@@ -7,11 +5,9 @@ def mask_king_attacks(square: int) -> int:
 
     mask = 0
 
-    # calculate the rank (r) and the file (f) of the square on the chessboard
-    r = square // 14
-    f = square % 14
+    r = square // 14 # rank
+    f = square % 14  # file
 
-    # calculate attack mask for each possible king move (8 directions)
     if (r < 13)           : mask ^= (1 << square + 14) # Up
     if (r < 13) & (f < 13): mask ^= (1 << square + 15) # Up-Right
     if (f < 13)           : mask ^= (1 << square + 1 ) # Right
@@ -30,11 +26,9 @@ def mask_knight_attacks(square: int) -> int:
 
     mask = 0
 
-    # calculate the rank (r) and the file (f) of the square on the chessboard
-    r = square // 14
-    f = square % 14
+    r = square // 14 # rank
+    f = square % 14  # file
 
-    # calculate attack mask for each possible king move (8 directions in L-shape)
     if (r < 12) & (f < 13): mask ^= (1 << square + 29) # Up-Up-Right
     if (r < 13) & (f < 12): mask ^= (1 << square + 16) # Up-Right-Right
     if (r > 0 ) & (f < 12): mask ^= (1 << square - 12) # Down-Right-Right
@@ -53,11 +47,9 @@ def mask_pawn_attacks(square: int, player: int) -> int:
 
     mask = 0
 
-    # calculate the rank (r) and the file (f) of the square on the chessboard
-    r = square // 14
-    f = square % 14
+    r = square // 14 # rank
+    f = square % 14  # file
 
-    # calculate attack mask for each possible pawn capture based on the player's direction
     if player == 0:
         if (r < 13) & (f > 0 ): mask ^= (1 << square + 13) # Up-Left
         if (r < 13) & (f < 13): mask ^= (1 << square + 15) # Up-Right
