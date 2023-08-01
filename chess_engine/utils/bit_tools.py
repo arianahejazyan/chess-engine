@@ -29,31 +29,63 @@ def p(integer: int) -> None:
 
     print(s)
 
-def v(integer: int) -> bool:
+def pop_bit(bitboard: int, square: int) -> int:
     """
-    Checks if the given integer is a valid board
+    Clears a bit in the binary representation of the given integer (bitboard) at the specified position (square).
     """
-
-    if integer & int('1' * 196, 2):
-        return True
-    else:
-        return False
     
-def square_to_board():
-    pass
+    return bitboard & ~ (1 << square)
 
-def board_to_square():
-    pass
+def set_bit(bitboard: int, square: int) -> int:
+    """
+    Sets a bit in the binary representation of the given integer (bitboard).
+    """
 
+    return bitboard | (1 << square) 
 
+def count_bits(bitboard: int) -> int:
+    """
+    Counts the number of set bits (1s) in the binary representation of the given integer (bitboard).
+    """
 
+    count = 0
 
-def pop_bit(board: int, square: int) -> int:
-    pass
+    while bitboard:
 
+        count += 1
 
-def set_bit(square):
-    pass
+        bitboard &= bitboard - 1
 
-def get_bit(square):
-    pass
+    return count
+
+def get_1s1b_index(bitboard: int) -> int:
+    """
+     Finds the index (position) of the least significant set bit (1-bit) in a given bitboard.
+    """
+    
+    if bitboard:
+
+        return count_bits((bitboard & -bitboard) - 1)
+    
+    else:
+
+        return -1
+    
+def set_occupancy(index, bits_in_mask, attack_mask):
+    """
+    Sets the occupancy of a chessboard for a specific attack_mask at the given index.
+    """
+
+    occupancy = 0
+
+    for count in range(bits_in_mask):
+
+        square = get_1s1b_index(attack_mask)
+
+        attack_mask = pop_bit(attack_mask, square)
+
+        if index & (1 << count):
+
+            occupancy |= (1 << square)
+
+    return occupancy
