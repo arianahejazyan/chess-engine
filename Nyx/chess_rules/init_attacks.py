@@ -9,7 +9,7 @@ def init_pawn_attacks() -> dict:
 
         for player in range(4):
 
-            attacks = mask_pawn_attacks(square, player)
+            attacks[(square, player)] = mask_pawn_attacks(square, player)
 
     return attacks
 
@@ -19,7 +19,7 @@ def init_knight_attacks() -> dict:
 
     for square in range(196):
 
-        attacks = mask_knight_attacks(square)
+        attacks[square] = mask_knight_attacks(square)
 
     return attacks
 
@@ -29,7 +29,7 @@ def init_king_attacks() -> dict:
 
     for square in range(196):
 
-        attacks = mask_king_attacks(square)
+        attacks[square] = mask_king_attacks(square)
 
     return attacks
 
