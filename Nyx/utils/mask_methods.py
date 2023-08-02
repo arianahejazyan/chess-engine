@@ -340,7 +340,7 @@ def vertical_attacks_on_fly(square: int, block: int) -> int:
         if (1 << square + d * 14) & block: break
 
     # generate down direction attacks
-    for d in range(1,      r): 
+    for d in range(1,r): 
         mask ^= (1 << square - d * 14)
         if (1 << square - d * 14) & block: break
 
