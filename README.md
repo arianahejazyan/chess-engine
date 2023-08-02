@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [Overview](#overview)
-- [About four player chess](#About-four-player-chess)
+- [About four player chess](#about-four-player-chess)
 
 ## Overview
 
