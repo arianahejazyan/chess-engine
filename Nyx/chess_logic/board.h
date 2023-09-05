@@ -1,36 +1,70 @@
 #include "../utils/constants.h"
 
+struct Position
+{
+    Piece  Pieces[196];
+    Player Players[196];
+    Square Royals[5];
+    Square En_passant[5];
+    CastleRights CastleRights[5];
+    Player Turn;
+};
+
+struct Move
+{
+    Square from;
+    Square to;
+    bool capture;
+    Flag flag;
+    Piece promotion;
+    Square enpass;
+    int side;
+};
+
+struct MoveList
+{
+    std::vector<Move> Checks;
+    std::vector<Move> Captures;
+    std::vector<Move> QuietMoves;
+};
+
 class Board
 {
     public:
-        int Pieces[196];
-        int Players[196];
-        int Royals[5];
-        int Enpassant[5];
-        int CastleRights;
-        int Turn;
 
-        MoveList getAllMoves();
-        bool makeMove(const int& move);
+        Position position;
+        MoveList moveList;
+
+        void GenerateAllMoves();
+        bool makeMove(const Move& move);
 
     private:
 
-        void placePiece(const int& square, const int& piece, const int& player);
-        void removePiece(const int& square);
+        // Board utility methods
+
+        void placePiece(const Square& square, const Piece& piece, const Player& player);
+        void removePiece(const Square& square);
         
-        bool isOpponentsPiece(const int& square, const int& player);
+        bool isOpponentsPiece(const Square& square, const Player& player);
 
-        bool isSquareAttacked(const int& square, const int& player);
-        bool isKingChecked(const int& player);
+        bool isSquareAttacked(const Square& square, const Player& player);
+        bool isKingChecked(const Player& player);
 
-        // Keys are used to read from pre_calculated moves
+        // Handling crawling pieces (pawn, knight, king) logic
+        
+        void GenerateCrawlingMoves(std::vector<Square> RelevantSquares[196], const Square& square);
+        void GenerateCastlingMoves(const Square& square);
 
-        int PawnKey(const int& square);
-        int KnightKey(const int& square);
-        int KingKey(const int& square);
+        void GeneratePawnMoves(const Square& square);
+        void GenerateKnightMoves(const Square& square);
+        void GenerateKingMoves(const Square& square);
 
-        int BishopKey(const int& square);
-        int RookKey(const int& square);
-        int QueenKey(const int& square);
+        // Handling sliding pieces (bishop, rook, queen) logic
+
+        void GenerateSlidingMoves(std::vector<Square> RelevantSquares[196][4], const Square& square);
+
+        void GenerateBishopMoves(const Square& square);
+        void GenerateRookMoves(const Square& square);
+        void GenerateQueenMoves(const Square& square);
         
 };
