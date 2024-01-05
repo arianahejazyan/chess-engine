@@ -160,38 +160,3 @@ int COLSIZE = 14;
 
 int MAXRANK = ROWSIZE - 1;
 int MAXFILE = COLSIZE - 1;
-
-map<tuple<Square, Piece>, vector<Move>> CRAWL_PSEUDO_MOVES;
-map<tuple<Square, Piece, Offset>, vector<Move>> SLIDE_PSEUDO_DIRECTIONS;
-map<tuple<Square, Piece, Color>, vector<Move>> MARCH_PSEUDO_MOVES;
-
-
-
-
-map<tuple<Piece, Color>, vector<Offset>> PIECE_ATTACK_OFFSETS;
-
-
-# define DIRECTION(offset, type, color) (2)
-
-map<Piece, vector<int>> PIECE_DIRECTIONS;
-
-
-typedef int Direction;
-
-
-/*
-    CRAWL: PSEUDO_MOVES[sq, piece, type]
-    SLIDE: PSEUDO_MOVES[sq, piece, type, offset]
-    MARCH: PSEUDO_MOVES[sq, piece, type, player]
-*/
-
-map<int, vector<Move>> PSEUDO_MOVES;
-
-
-vector<Square> VALID_SQUARES;
-
-vector<Piece> PIECE_LIST;
-
-map<Piece, vector<Offset>> PIECE_RAYS;
-
-void inintRays();
