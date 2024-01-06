@@ -17,3 +17,5 @@ namespace
 
     map<Piece, vector<Offset>> PIECE_RAYS;
 };
+
+void init_valid_squares();
