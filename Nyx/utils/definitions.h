@@ -148,15 +148,15 @@ struct Position
                           
 \***************************************/
 
-Config config;
+namespace 
+{
+    Config config;
 
-Player red;
-Player blue;
-Player yellow;
-Player green;
+    Player red;
+    Player blue;
+    Player yellow;
+    Player green;
 
-int ROWSIZE = 14;
-int COLSIZE = 14;
-
-int MAXRANK = ROWSIZE - 1;
-int MAXFILE = COLSIZE - 1;
+    Player white;
+    Player black;
+};
