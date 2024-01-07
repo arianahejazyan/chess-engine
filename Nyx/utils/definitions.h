@@ -5,15 +5,7 @@
 
 using namespace std;
 
-/***************************************\
-    
-                  enums
-                          
-\***************************************/
-
-//enum Offset {Up=14, UpRight=15, Right=1, DownRight=-13, Down=-14, DownLeft=-15, Left=-1, UpLeft=13, UpUpRight=29, UpRightRight=16, DownRightRight=-12, DownDownRight=-27, DownDownLeft=-29, DownLeftLeft=-16, UpLeftLeft=12, UpUpLeft=27};
-
-//enum Piece {Brick=-2, empty=-1, King=0, Queen=1, Rook=2, Bishop=3, Knight=4, Pawn=5};
+/* ---------------------------------------------------------------------------- */
 
 enum Offset {UP=14, RIGHT=1, DOWN=-14, LEFT=-1};
 
@@ -54,26 +46,13 @@ enum PieceType {Crawler=1, Slider=2, Infantry=4, Leaper=8};
 
 enum Spell {Magic, Freeze};
 
-/***************************************\
-    
-                 typedefs
-                          
-\***************************************/
-
+/* ---------------------------------------------------------------------------- */
 
 typedef int Move;
-typedef int HP;
 typedef int Time;
-typedef int Point;
-
 typedef int Info;
 
-
-/***************************************\
-    
-                 structs
-                          
-\***************************************/
+/* ---------------------------------------------------------------------------- */
 
 struct TimeControl
 {
@@ -141,12 +120,7 @@ struct Position
     Player turn;
 };
 
-
-/***************************************\
-    
-                variables
-                          
-\***************************************/
+/* ---------------------------------------------------------------------------- */
 
 namespace 
 {
