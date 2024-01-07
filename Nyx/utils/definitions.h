@@ -61,27 +61,11 @@ struct TimeControl
     TimeControlType type;
 };
 
-struct Config
+struct Rules
 {
-    Setup setup;
-    int promotion_rank;
-    int home_rank;
-    int N_Check;
-    StaleMate stalemate;
-    TimeControl timeControl;
-    vector<Piece> promotion_list;
-    Mode mode;
-    Piece bricks[196];
-
-
-    vector<Square> KotHSquares;
-
     bool castle;
     bool promotion;
     bool Zombie;
-
-    Color teammate;
-
     bool give_away;
     bool bare_piece_rule;
     bool allow_passing;
@@ -101,7 +85,23 @@ struct Config
     bool stone_wall;
     bool play_for_mate;
     bool take_over;
-    bool no_zombies;    
+    bool no_zombies;  
+};
+
+struct Config
+{
+    Rules rules;
+    Setup setup;
+    int promotion_rank;
+    int home_rank;
+    int N_Check;
+    StaleMate stalemate;
+    TimeControl timeControl;
+    vector<Piece> promotion_list;
+    Mode mode;
+    Piece bricks[196];
+    vector<Square> KotHSquares;
+    Color teammate;
 };
 
 struct Player
