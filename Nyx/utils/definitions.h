@@ -11,7 +11,7 @@ enum Offset {UP=14, RIGHT=1, DOWN=-14, LEFT=-1};
 
 enum Piece {King, Queen, Rook, Bishop, Knight, Pawn, Amazon, Chancellor, Archbishop, General, Wildebeest, Camel, Grasshopper, Ferz, Wazir, Alfil, Dabbaba, Alibaba, XianqiHorse, Dragon, KnightRider, CamelRider, AlfilRider, DabbabaRider, AlibabaRider, Berolina, Soldier, StoneGeneral, Sergeant, Duck, Brick, empty};
 
-enum Color {none=-1, Red=0, Blue=1, Yellow=2, Green=3};
+enum Color {none=-1, Red=0, Blue=1, Yellow=2, Green=3, White=0, Black=1};
 
 enum Flag {null=0, LEAP=1, SLIDE=2, PUSH=4, SIDEPUSH=8, DOUBLEPUSH=16, ATTACK=32, ADVANCE=64, PROMOTION=128, ENPASSANT=256, CASTLE=512, HOP=1024, CRAWL=2048, CAPTURE=4096};
 
