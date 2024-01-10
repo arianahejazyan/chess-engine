@@ -63,18 +63,15 @@ struct TimeControl
 
 struct Rules
 {
-    bool castle;
-    bool promotion;
-    bool Zombie;
     bool give_away;
     bool bare_piece_rule;
     bool allow_passing;
-    bool SeirawanSetup;
-    bool CrazyHouse;
-    bool DuckChess;
+    bool seirawan_setup;
+    bool crazy_house;
+    bool duck_chess;
     bool spell_chess;
-    bool KingoftheHill;
-    bool CaptureTheKing;
+    bool king_of_the_hill;
+    bool capture_the_king;
     bool taboo;
     bool atomic;
     bool any_capture;
