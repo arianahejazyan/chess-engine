@@ -117,7 +117,27 @@ struct Position
     Piece pieces[196];
     Color players[196];
     Square royals[4];
+    Castle right;
     Player turn;
+};
+
+struct PNG4
+{
+    Position position;
+    Mode variants;
+    Rules variant_rules;
+    TimeControl time_control;
+    ScoreSheet move_history;
+};
+
+struct ScoreSheet
+{
+
+};
+
+struct Setting
+{
+
 };
 
 /* ---------------------------------------------------------------------------- */
