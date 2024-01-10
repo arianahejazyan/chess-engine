@@ -42,8 +42,6 @@ enum StaleMate {draw, lose, win};
 
 enum Mode {TEAM, FFA, WB};
 
-enum PieceType {Crawler=1, Slider=2, Infantry=4, Leaper=8};
-
 enum Spell {Magic, Freeze};
 
 /* ---------------------------------------------------------------------------- */
