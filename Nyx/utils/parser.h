@@ -4,12 +4,9 @@ class Parser
 {
     public:
 
-        Position pos;
-        Config config;
-        Player players[4];
+        Position parse(const string& fen);
 
-        void process(const string& fen);
-        void convert();
+        string convert(const Move& move);        
 };
 
 namespace
