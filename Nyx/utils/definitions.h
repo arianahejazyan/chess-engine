@@ -40,7 +40,7 @@ enum Setup {standrad, old_setup};
 
 enum StaleMate {draw, lose, win};
 
-enum Mode {TEAM, FFA, WB};
+enum Mode {TEAM, FFA};
 
 enum Spell {Magic, Freeze};
 
@@ -80,7 +80,8 @@ struct Rules
     bool stone_wall;
     bool play_for_mate;
     bool take_over;
-    bool no_zombies;  
+    bool no_zombies;
+    bool fog_of_war;
 };
 
 struct Config
@@ -91,7 +92,7 @@ struct Config
     int home_rank;
     int N_Check;
     StaleMate stalemate;
-    TimeControl timeControl;
+    TimeControl time_control;
     vector<Piece> promotion_list;
     Mode mode;
     Piece bricks[196];
@@ -112,7 +113,8 @@ struct Position
     Piece pieces[196];
     Color players[196];
     Square royals[4];
-    Castle right;
+    Castle castling_rights[4];
+    Square marked[4];
     Player turn;
 };
 
@@ -123,6 +125,16 @@ struct PNG4
     Rules variant_rules;
     TimeControl time_control;
     ScoreSheet move_history;
+};
+
+struct PNG4
+{
+    string start_fen4;
+    string variant;
+    string rule_variants;
+    string current_move;
+    string time_control;
+    string move_history;
 };
 
 struct ScoreSheet
