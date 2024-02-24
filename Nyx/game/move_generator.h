@@ -2,6 +2,8 @@
 #include "../utils/constants.h"
 #include "../utils/utils.h"
 
+using namespace CONSTANTS;
+
 class MoveGenerator
 {
     public:
