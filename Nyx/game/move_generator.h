@@ -28,3 +28,8 @@ class MoveGenerator
 
         void add_move(const Position& pos, int move, vector<int>& move_list);
 };
+
+namespace
+{
+    MoveGenerator move_generator;
+}
