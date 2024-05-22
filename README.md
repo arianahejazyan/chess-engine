@@ -1,4 +1,4 @@
-![four player chess](assets/four-player-chess.png)
+![four player chess](.github/assets/four-player-chess.png)
 
 ## Table of Contents
 - [Overview](#overview)
