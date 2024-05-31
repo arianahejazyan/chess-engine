@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=70.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Talia"
+version = "0.0.0"
+authors = [
+    {name="Ariana Hejazyan", email="arianahejazyan@gmail.com"},
+    {name="Fatemeh Bouzari", email="fatemehfnb26@gmail.com"},
+]
+description = "Talia is a powerful open-source chess engine that plays different variants of chess."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers =[
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/arianahejazyan/chess-engine"
+Issues = "https://github.com/arianahejazyan/chess-engine/issues"
