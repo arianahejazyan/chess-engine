@@ -1,36 +1,35 @@
-name: Upload Python Package
+name: Publish Python Package
 
 on:
-  release:
-    types: [published]  # This triggers the workflow when a new release is published
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
-  pypi-publish:
-    name: Upload release to PyPI
+  publish:
     runs-on: ubuntu-latest
-    environment: release
-    permissions:
-      id-token: write  # Mandatory permission for trusted publishing
-      
-    steps:
-        - name: Check out the repository
-          uses: actions/checkout@v2  # Step to check out the repository
-        
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: '3.x'  # Specify your project's Python version
-            
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install setuptools wheel twine  # Add any other dependencies your project needs
-        
-        - name: Build the package
-          run: |
-            python setup.py sdist bdist_wheel  # Adjust if using pyproject.toml or a different build system
 
-        - name: Publish package distributions to PyPI
-          uses: pypa/gh-action-pypi-publish@release/v1
-          with:
-            password: ${{ secrets.PYPI_API_TOKEN }}  # Ensure PYPI_API_TOKEN is set in your repository secrets
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - name: Build package
+        run: |
+          python setup.py sdist bdist_wheel
+
+      - name: Publish package
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*
