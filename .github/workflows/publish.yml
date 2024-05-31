@@ -2,21 +2,20 @@ name: Publish Python Package
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  publish:
-    runs-on: windows-latest
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v4  # Update the version to v4
         with:
-          node-version: '20'
+          python-version: '3.x'  # Specify the Python version you want to use
 
       - name: Install dependencies
         run: |
