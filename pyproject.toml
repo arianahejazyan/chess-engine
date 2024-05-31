@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "talia"
-version = "0.0.0"
+version = "0.0.1"
 authors = [
     {name="Ariana Hejazyan", email="arianahejazyan@gmail.com"},
     {name="Fatemeh Bouzari", email="fatemehfnb26@gmail.com"},
