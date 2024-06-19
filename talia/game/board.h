@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include "player.h"
 
 /* ---------------------------------------------------------------------------- */
 
@@ -20,41 +22,47 @@ enum Square
     a14, b14, c14, d14, e14, f14, g14, h14, i14, j14, k14, l14, m14, n14, X
 };
 
-enum Player {Zombie=-3, Dead=-2, None=-1, Red=0, Blue=1, Yellow=2, Green=3};
+/* ---------------------------------------------------------------------------- */
 
-enum Piece {Brick=-1, Empty=0, King=1, Queen=2, Rook=3, Bishop=4, Knight=5, Pawn=6};
+#define Rank(sq) (sq / BOARD::COLSIZE)
+#define File(sq) (sq % BOARD::COLSIZE)
+#define Tile(r,f) (static_cast<Square>(r * BOARD::ROWSIZE + f))
 
-enum Offset {S=0, U=14, R=1, D=-14, L=-1};
+/* ---------------------------------------------------------------------------- */
 
-enum Flag {Null=0, Push=1, DoublePush=2, Advance=4, Enpassant=8, Promotion=16, Leap=32, Slide=64, Castle=128, Capture=256, Check=512};
-
-enum Side {Neither=0, KingSide=1, QueenSide=2};
-
-enum GameState {ongoing, over};
-
-struct Move
+namespace BOARD
 {
-    Square from;
-    Square to;
-    Square midway;
-    Square target;
-    Piece promotion;
-    Side side;
-    Flag flag;
-};
+    constexpr int ROWSIZE = 14;
+    constexpr int COLSIZE = 14;
 
-struct Position
-{
-    Player turn;
-    Piece pieces[196];
-    Piece players[196];  
-    Square royals[4];
-    Square marked[4];
-    Square target[4];
-    GameState state;
-    bool kingSide[4];
-    bool queenSide[4];
-    bool safty[4];
+    constexpr int MAXRANK = ROWSIZE - 1;
+    constexpr int MAXFILE = COLSIZE - 1;
+
+    constexpr int BOARDSIZE = ROWSIZE * COLSIZE;
+
+    int HOMERANK;
+
+    int PROMOTIONRANK;
+
+    bool bricks[BOARDSIZE];
+
+    const Square SQUARE[BOARDSIZE];
+
+    std::vector<Square> VALID_SQUARES;
+    
+    bool IS_PROMOTION_SQUARE[BOARDSIZE][MAX_PLAYERS];
+
+    bool IS_HOMERANK_SQUARE[BOARDSIZE][MAX_PLAYERS];
+
+    void initValidSquares();
+
+    bool isPromotionSquare(const Square& sq, const Color& player);
+
+    bool isHomeRankSquare(const Square& sq, const Color& player);
+
+    bool isValidSquare(int r, int f);
+
+    void init();
 };
 
 /* ---------------------------------------------------------------------------- */

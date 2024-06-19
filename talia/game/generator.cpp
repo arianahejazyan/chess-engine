@@ -26,19 +26,19 @@ void Generator::generate_all_positions(std::vector<Position>& list, const Positi
 
 /* ---------------------------------------------------------------------------- */
 
-inline void Generator::leap(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void Generator::leap(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Move& move: Pseudo::LEAP[Key(sq,pos.pieces[sq])])
+    for (const Move& move: PSEUDO::LEAP[Key(sq,pos.pieces[sq])])
     {
         make_move(list, pos, move);
     }
 }
 
-inline void Generator::slide(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void Generator::slide(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Offset& offset: Pseudo::RAY[Key(sq,pos.pieces[sq])])
+    for (const Offset& offset: PSEUDO::RAY[Key(sq,pos.pieces[sq])])
     {
-        for (const Move& move: Pseudo::SLIDE[Key(sq,pos.pieces[sq],offset)])
+        for (const Move& move: PSEUDO::SLIDE[Key(sq,pos.pieces[sq],offset)])
         {
             make_move(list, pos, move);
 
@@ -47,9 +47,9 @@ inline void Generator::slide(std::vector<Position>& list, const Position& pos, c
     }
 }
 
-inline void Generator::push(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void Generator::push(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Move& move: Pseudo::PUSH[Key(sq,pos.pieces[sq],pos.turn)])
+    for (const Move& move: PSEUDO::PUSH[Key(sq,pos.pieces[sq],pos.turn)])
     {
         if (pos.pieces[move.to] == Empty)
         {
@@ -69,9 +69,9 @@ inline void Generator::push(std::vector<Position>& list, const Position& pos, co
     }
 }
 
-inline void Generator::advance(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void Generator::advance(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Move& move: Pseudo::ADVANCE[Key(sq,pos.pieces[sq],pos.turn)])
+    for (const Move& move: PSEUDO::ADVANCE[Key(sq,pos.pieces[sq],pos.turn)])
     {
         if (pos.pieces[move.to] != Empty)
         {
@@ -80,7 +80,7 @@ inline void Generator::advance(std::vector<Position>& list, const Position& pos,
     }
 }
 
-inline void Generator::enpassant(std::vector<Position>& list, const Position& pos)
+inline static void Generator::enpassant(std::vector<Position>& list, const Position& pos)
 {
   for (const Player opponent: OPPONENTS[pos.turn])
     {
@@ -93,7 +93,7 @@ inline void Generator::enpassant(std::vector<Position>& list, const Position& po
     }
 }
 
-inline void Generator::castle(std::vector<Position>& list, const Position& pos)
+inline static void Generator::castle(std::vector<Position>& list, const Position& pos)
 {
     for (const Side& side: {KingSide, QueenSide})
     {
@@ -116,15 +116,18 @@ inline void Generator::castle(std::vector<Position>& list, const Position& pos)
     }
 }
 
-inline void Generator::pass(std::vector<Position>& list, const Position& pos)
+inline static void Generator::pass(std::vector<Position>& list, const Position& pos)
 {
     if (Config::allow_passing) make_move(list, pos, Move());
 }
 
 /* ---------------------------------------------------------------------------- */
 
-void Generator::make_move(std::vector<Position>& list, Position pos, const Move move)
+static void Generator::make_move(std::vector<Position>& list, const Position& previous, const Move& move)
 {
+    /* make copy of position */
+    Position pos(previous);
+
     /* move piece */
     if (move.from != X)
     {
@@ -180,35 +183,29 @@ void Generator::make_move(std::vector<Position>& list, Position pos, const Move 
         remove(pos, SECURE_SQUARES[]);
     }
 
-
-
-
     /* handle safty */
+    pos.safty[pos.turn] = countRoyalChecks(pos, pos.turn);
 
-    bool check = false;
-
-    for (const Player& player: PLAYERS)
+    if (isRoyalSafe(pos))
     {
-        pos.safty[player] = isSquareSafe(pos, pos.royals[player], player);
+        for (const Color& player: PLAYER::OTHERS)
+        {
+            pos.safty[player] = countRoyalChecks(pos, player);
+        }
 
-        if (isOpponent(pos.turn, player)) check = true;
-    }
-
-    if (pos.safty[pos.turn])
-    {
-
+        list.push_back();
     }
 }
 
 /* ---------------------------------------------------------------------------- */
 
-inline void Generator::place(Position& pos, const Square& sq, const Piece& piece, const Color& player)
+inline static void Generator::place(Position& pos, const Square& sq, const Piece& piece, const Color& player)
 {
     pos.pieces[sq] = piece;
     pos.players[sq] = player;
 }
 
-inline void Generator::remove(Position& pos, const Square& sq)
+inline static void Generator::remove(Position& pos, const Square& sq)
 {
     pos.pieces[sq] = Empty;
     pos.players[sq] = None;
@@ -216,113 +213,84 @@ inline void Generator::remove(Position& pos, const Square& sq)
 
 /* ---------------------------------------------------------------------------- */
 
-inline static countSafty()
+inline static bool Generator::isRoyalSafe(const Position& pos)
 {
-    for 
+    return Config::capture_the_king || (pos.safty[pos.turn] == 0);
 }
 
-inline static int attackedByLeap()
+inline static bool Generator::isSquareSafe(const Position& pos, const Color& player)
 {
-    int count = 0;
-    for (const Offset& offset: LEAP_ATTACK)
-    {
-        for (const Square& loc: )
-        {
-            if (PLAYER::OPPONENT[][] && ) count++;
-        }
-    }
-
-    return count;
-}
-
-inline static int attackedBySlide()
-{
-    int count = 0;
-    for (const Offset& offset: LEAP_ATTACK)
-    {
-        for (const Square& loc: )
-        {
-            if (pos.pieces[move.to] != Empty)
-            {
-                if (PLAYER::OPPONENT[][] && ) count++;
-
-                break;
-            }
-        }
-    }
-
-    return count;
-}
-
-inline static int attackedByAdvance()
-{
-    int count = 0;
-    for (const Offset& offset: LEAP_ATTACK)
-    {
-        for (const Square& loc: )
-        {
-            if (PLAYER::OPPONENT[][] && ) count++;
-        }
-    }
-
-    return count;
-}
-
-
-
-inline bool Generator::isSquareSafe(const Position& pos, const Square& sq, const Player& player)
-{
-    if (Config::capture_the_king) return true;
-
-    /* is attacked by leap */
-    for (const Piece& leaper: PIECE_LIST[Leap])
-    {
-        for (const Move& move: PSEUDO_LEAP_MOVES[encodeLeap(sq, leaper)])
-        {
-            if (isOpponent(pos.turn, pos.players[move.to]) && pos.pieces[move.to] == leaper) return false;
-        }
-    }
-
-    /* is attacked by slide */
-    for (const Offset& offset: OFFSETS[Slide])
-    {
-        for (const Move& move: PSEUDO_SLIDE_MOVES[encodeSlide(sq, offset)])
-        {
-            if (pos.pieces[move.to] != Empty)
-            {
-                if (isOpponent(pos.turn, pos.players[move.to]) && pos.pieces[move.to] == slider) return false; 
-
-                break;
-            }            
-        }
-    } 
-
-    for (const Piece& slider: PIECE_LIST[Slide])
-    {
-        for (const Offset& offset: OFFSETS[encodeOffset(Slide, sq, pos.pieces[sq])])
-        {
-            for (const Move& move: PSEUDO_SLIDE_MOVES[encodeSlide(sq, offset)])
-            {
-                if (pos.pieces[move.to] != Empty)
-                {
-                    if (isOpponent(pos.turn, pos.players[move.to]) && pos.pieces[move.to] == slider) return false; 
-
-                    break;
-                }
-            }
-        }
-    }
-
-    /* is attacked by advance */
-    for (const Player& opponent: OPPONENTS[pos.turn])
-    {
-        for (const Square& loc: PAWN_ATTACKS[opponent])
-        {
-            if (isOpponent(pos.turn, pos.players[opponent]) && pos.pieces[loc] == Pawn) return false;
-        }
-    }
+    if (attackedByLeap(pos, pos.royals[player]) != 0) return false;
+    if (attackedBySlide(pos, pos.royals[player]) != 0) return false;
+    if (attackedByAdvance(pos, pos.royals[player]) != 0) return false;
 
     return true;
+}
+
+inline static unsigned short Generator::countRoyalChecks(Position& pos, const Color& player)
+{
+    unsigned short count = 0;
+
+    count += attackedByLeap(pos, pos.royals[player]);
+    count += attackedBySlide(pos, pos.royals[player]);
+    count += attackedByAdvance(pos, pos.royals[player]);
+
+    return count;
+}
+
+inline static unsigned short Generator::attackedByLeap(const Position& pos, const Square& sq)
+{
+    unsigned short count = 0;
+    for (const std::pair<Offset, Square>& pair: PSEUDO::LEAP_OFFSETS[sq])
+    {
+        if (!PLAYER::OPPONENT[pos.turn][pos.players[pair.second]]) continue;
+
+        if (!PSEUDO::VALID_LEAP[pos.pieces[pair.second]][pair.first]) continue;
+
+        count++;
+    }
+
+    return count;
+}
+
+inline static unsigned short Generator::attackedBySlide(const Position& pos, const Square& sq)
+{
+    unsigned short count = 0;
+    for (const Offset& offset: PSEUDO::SLIDE_OFFSETS[sq])
+    {
+        for (const Square& loc: PSEUDO::SLIDE_RAY[sq][offset])
+        {
+            if (pos.pieces[loc] != Empty)
+            {
+                if (PLAYER::OPPONENT[pos.turn][pos.players[loc]]) break;
+
+                if (PSEUDO::VALID_SLIDE[pos.pieces[loc]][offset]) break;
+
+                count++;
+                break;
+            }
+        }
+    }
+
+    return count;
+}
+
+inline static unsigned short Generator::attackedByAdvance(const Position& pos, const Square& sq)
+{
+    unsigned short count = 0;
+    for (const Color& opponent: PLAYER::OPPONENT_LIST[pos.turn])
+    {
+        for (const std::pair<Offset, Square>& pair: PSEUDO::ADVANCE_OFFSETS[sq][opponent])
+        {
+            if (PLAYER::OPPONENT[pos.turn][pos.players[pair.second]]) continue;
+
+            if (PSEUDO::VALID_ADVANCE[pos.pieces[pair.second]][pair.first]) continue;
+            
+            count++;
+        }
+    }
+
+    return count;
 }
 
 /* ---------------------------------------------------------------------------- */

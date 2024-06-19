@@ -32,3 +32,8 @@ Offset operator*(int count, Offset offset);
 Offset operator*(Offset offset, int count);
 
 /* ---------------------------------------------------------------------------- */
+
+namespace OFFSET
+{
+    const int MAX_OFFSETS = 5;
+};

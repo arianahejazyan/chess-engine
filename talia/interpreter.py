@@ -1,5 +1,20 @@
 import itertools
 
+rules = {
+    'torpedo':False,
+    'torpedo':False,
+    'torpedo':False,
+    'torpedo':False,
+    'torpedo':False,
+    'torpedo':False,
+}
+
+config = {
+    'rules': rules,
+    'bricks': 0,
+    
+}
+
 def get_user_input():
     
     for i in itertools.count():
