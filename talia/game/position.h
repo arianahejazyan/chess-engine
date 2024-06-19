@@ -12,19 +12,25 @@ enum GameState {ongoing, over};
 struct Position
 {
     Color turn;
-    Piece* pieces;
-    Color* players;  
+    Piece pieces[BOARD::BOARD_SIZE];
+    Color players[BOARD::BOARD_SIZE];  
     Square royals[PLAYER::MAX_PLAYERS];
     Square marked[PLAYER::MAX_PLAYERS];
     Square target[PLAYER::MAX_PLAYERS];
     bool kingSide[PLAYER::MAX_PLAYERS];
     bool queenSide[PLAYER::MAX_PLAYERS];
     unsigned short safty[PLAYER::MAX_PLAYERS];
+
+    Position();
+
+    Position(const Position& pos);
+
+    ~Position();
 };
 
 /* ---------------------------------------------------------------------------- */
 
-namespace
+namespace POSITION
 {
     GameState state();
 };
