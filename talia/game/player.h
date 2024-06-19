@@ -26,17 +26,16 @@ namespace PLAYER
 {
     constexpr int MAX_PLAYERS = 4;
 
+    Player PLAYER_LIST[MAX_PLAYERS] = {Player(Red),Player(Blue),Player(Yellow),Player(Green)};
+
     constexpr Color COLOR_LIST[MAX_PLAYERS] = {Red, Blue, Yellow, Green};
+    std::vector<Color> OPPONENT_LIST[MAX_PLAYERS];
+    std::vector<Color> TEAMMATE_LIST[MAX_PLAYERS];
+    std::vector<Color> ALIVE_LIST;
+    std::vector<Color> DEAD_LIST;
 
     bool TEAMMATE[MAX_PLAYERS][MAX_PLAYERS];
     bool OPPONENT[MAX_PLAYERS][MAX_PLAYERS];
-
-    Player PLAYER_LIST[MAX_PLAYERS] = {Player(Red),Player(Blue),Player(Yellow),Player(Green)};
-
-    void foo();
-
-    std::vector<Color> OPPONENT_LIST[MAX_PLAYERS];
-    std::vector<Color> TEAMMATE_LIST[MAX_PLAYERS];
 };
 
 /* ---------------------------------------------------------------------------- */
