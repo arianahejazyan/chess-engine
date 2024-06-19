@@ -21,7 +21,7 @@ struct Key
 
 /* ---------------------------------------------------------------------------- */
 
-namespace Pseudo
+namespace PSEUDO
 {
     std::unordered_map<Key, std::vector<Move>> LEAP;
     std::unordered_map<Key, std::vector<Move>> SLIDE;
@@ -33,6 +33,31 @@ namespace Pseudo
     std::unordered_map<Key, std::vector<Move>> PASSING;
 
     std::unordered_map<Key, std::vector<Offset>> RAY;
+
+
+
+    // contains all leap offsets //
+    std::vector<std::pair<Offset, Square>> LEAP_OFFSETS[BOARD::BOARDSIZE];
+
+    // contains all slide offsets //
+    std::vector<Offset> SLIDE_OFFSETS[BOARD::BOARDSIZE];
+    std::unordered_map<Offset, std::vector<Square>> SLIDE_RAY[BOARD::BOARDSIZE];
+
+    // contains all advance offsets //
+    std::vector<std::pair<Offset, Square>> ADVANCE_OFFSETS[BOARD::BOARDSIZE][PLAYER::MAX_PLAYERS];
+
+    //  //
+    std::unordered_map<Offset, bool> VALID_LEAP[PIECE::MAX_PIECES];
+    std::unordered_map<Offset, bool> VALID_SLIDE[PIECE::MAX_PIECES];
+    std::unordered_map<Offset, bool> VALID_ADVANCE[PIECE::MAX_PIECES];
+
+    
+
+    
+
+
+    
+
 
     void leap(const Square& sq, const Piece& piece, const Direction& dir);
 
