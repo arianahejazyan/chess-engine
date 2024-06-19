@@ -24,35 +24,35 @@ enum Square
 
 /* ---------------------------------------------------------------------------- */
 
-#define Rank(sq) (sq / BOARD::COLSIZE)
-#define File(sq) (sq % BOARD::COLSIZE)
-#define Tile(r,f) (static_cast<Square>(r * BOARD::ROWSIZE + f))
+#define Rank(sq) (sq / BOARD::COL_SIZE)
+#define File(sq) (sq % BOARD::COL_SIZE)
+#define Tile(r,f) (static_cast<Square>(r * BOARD::ROW_SIZE + f))
 
 /* ---------------------------------------------------------------------------- */
 
 namespace BOARD
 {
-    constexpr int ROWSIZE = 14;
-    constexpr int COLSIZE = 14;
+    constexpr int ROW_SIZE = 14;
+    constexpr int COL_SIZE = 14;
 
-    constexpr int MAXRANK = ROWSIZE - 1;
-    constexpr int MAXFILE = COLSIZE - 1;
+    constexpr int MAX_RANK = ROW_SIZE - 1;
+    constexpr int MAX_FILE = COL_SIZE - 1;
 
-    constexpr int BOARDSIZE = ROWSIZE * COLSIZE;
+    constexpr int BOARD_SIZE = ROW_SIZE * COL_SIZE;
 
-    int HOMERANK;
+    int HOME_RANK;
 
-    int PROMOTIONRANK;
+    int PROMOTION_RANK;
 
-    bool bricks[BOARDSIZE];
+    bool bricks[BOARD_SIZE];
 
-    const Square SQUARE[BOARDSIZE];
+    const Square SQUARE[BOARD_SIZE];
 
     std::vector<Square> VALID_SQUARES;
     
-    bool IS_PROMOTION_SQUARE[BOARDSIZE][MAX_PLAYERS];
+    bool IS_PROMOTION_SQUARE[BOARD_SIZE][MAX_PLAYERS];
 
-    bool IS_HOMERANK_SQUARE[BOARDSIZE][MAX_PLAYERS];
+    bool IS_HOMERANK_SQUARE[BOARD_SIZE][MAX_PLAYERS];
 
     void initValidSquares();
 
