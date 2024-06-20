@@ -51,10 +51,6 @@ namespace PSEUDO
     std::unordered_map<Offset, bool> VALID_SLIDE[PIECE::MAX_PIECES];
     std::unordered_map<Offset, bool> VALID_ADVANCE[PIECE::MAX_PIECES];
 
-    
-
-    
-
 
     
 
