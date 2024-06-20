@@ -20,6 +20,7 @@ struct Position
     bool kingSide[PLAYER::MAX_PLAYERS];
     bool queenSide[PLAYER::MAX_PLAYERS];
     unsigned short safty[PLAYER::MAX_PLAYERS];
+    bool alive[PLAYER::MAX_PLAYERS];
 
     Position();
 

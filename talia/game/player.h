@@ -31,8 +31,6 @@ namespace PLAYER
     constexpr Color COLOR_LIST[MAX_PLAYERS] = {Red, Blue, Yellow, Green};
     std::vector<Color> OPPONENT_LIST[MAX_PLAYERS];
     std::vector<Color> TEAMMATE_LIST[MAX_PLAYERS];
-    std::vector<Color> ALIVE_LIST;
-    std::vector<Color> DEAD_LIST;
 
     bool TEAMMATE[MAX_PLAYERS][MAX_PLAYERS];
     bool OPPONENT[MAX_PLAYERS][MAX_PLAYERS];
