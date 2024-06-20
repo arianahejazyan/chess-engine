@@ -12,14 +12,19 @@ Position::Position(const Position& pos): turn(pos.turn)
         players[sq] = pos.players[sq];
     }
 
-    for (const Color& player: PLAYER::ALIVE_LIST)
+    for (const Color& player: PLAYER::COLOR_LIST)
     {
-        royals[player] = pos.royals[player];
-        marked[player] = pos.marked[player];
-        target[player] = pos.target[player];
-        kingSide[player] = pos.kingSide[player];
-        queenSide[player] = pos.queenSide[player];
-        safty[player] = pos.safty[player];
+        alive[player] = pos.alive[player];
+
+        if (pos.alive[player])
+        {
+            royals[player] = pos.royals[player];
+            marked[player] = pos.marked[player];
+            target[player] = pos.target[player];
+            kingSide[player] = pos.kingSide[player];
+            queenSide[player] = pos.queenSide[player];
+            safty[player] = pos.safty[player];            
+        }
     }
 }
 
