@@ -39,7 +39,7 @@ namespace Generator
 
     inline static bool isRoyalSafe(const Position& pos);
 
-    inline static bool isSquareSafe(const Position& pos, const Color& player);
+    inline static bool isSquareSafe(const Position& pos, const Square& sq);
 
     inline static unsigned short countRoyalChecks(Position& pos, const Color& player);
 
