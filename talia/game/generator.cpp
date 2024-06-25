@@ -98,21 +98,21 @@ inline static void Generator::castle(std::vector<Position>& list, const Position
     for (const Side& side: {KingSide, QueenSide})
     {
         /* castle rights */
-        if (pos.castle[pos.turn][side] == false) continue;
+        if (pos.rights[pos.turn][side] == false) continue;
 
         /* empty squares */
-        for (const Square& sq: PASSING_SQUARES[encodeCastle(pos.turn, side)])
+        for (const Square& sq: PSEUDO::PASSING_SQUARES[hash(pos.turn, side)])
         {
             if (pos.pieces[sq] != Empty) continue;
         }
 
         /* safe squares */
-        for (const Square& sq: SECURE_SQUARES[encodeCastle(pos.turn, move.side)])
+        for (const Square& sq: PSEUDO::SECURE_SQUARES[hash(pos.turn, side)])
         {
             if (!isSquareSafe(pos, sq)) continue;
         }
 
-        make_move(list, pos, Pseudo::CASTLE[Key(pos.turn, move.side)]);
+        make_move(list, pos, PSEUDO::CASTLE[hash(pos.turn, side)]);
     }
 }
 
@@ -218,11 +218,11 @@ inline static bool Generator::isRoyalSafe(const Position& pos)
     return Config::capture_the_king || (pos.safty[pos.turn] == 0);
 }
 
-inline static bool Generator::isSquareSafe(const Position& pos, const Color& player)
+inline static bool Generator::isSquareSafe(const Position& pos, const Square& sq)
 {
-    if (attackedByLeap(pos, pos.royals[player]) != 0) return false;
-    if (attackedBySlide(pos, pos.royals[player]) != 0) return false;
-    if (attackedByAdvance(pos, pos.royals[player]) != 0) return false;
+    if (attackedByLeap(pos, sq) != 0) return false;
+    if (attackedBySlide(pos, sq) != 0) return false;
+    if (attackedByAdvance(pos, sq) != 0) return false;
 
     return true;
 }

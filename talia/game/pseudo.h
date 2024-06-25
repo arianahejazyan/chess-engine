@@ -19,6 +19,8 @@ struct Key
     Key(Square sq, Piece piece, Color player);
 };
 
+#define hash(player, side) (player * OFFSET::MAX_SIDE + side)
+
 /* ---------------------------------------------------------------------------- */
 
 namespace PSEUDO
@@ -27,10 +29,11 @@ namespace PSEUDO
     std::unordered_map<Key, std::vector<Move>> SLIDE;
     std::unordered_map<Key, std::vector<Move>> PUSH;
     std::unordered_map<Key, std::vector<Move>> ADVANCE;
-    std::unordered_map<Key, Move> CASTLE;
 
-    std::unordered_map<Key, std::vector<Move>> SECURE;
-    std::unordered_map<Key, std::vector<Move>> PASSING;
+    std::unordered_map<int, Move> CASTLE;
+
+    std::unordered_map<int, std::vector<Square>> SECURE_SQUARES;
+    std::unordered_map<int, std::vector<Square>> PASSING_SQUARES;
 
     std::unordered_map<Key, std::vector<Offset>> RAY;
 
