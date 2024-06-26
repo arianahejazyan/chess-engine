@@ -3,6 +3,8 @@
 
 /* ---------------------------------------------------------------------------- */
 
+typedef int Ray;
+
 enum Offset {S=0, U=1, R=1, D=-1, L=-1};
 
 enum Flag {Null=0, Push=1, DoublePush=2, SideWays, Advance=4, Enpassant=8, Promotion=16, Leap=32, Slide=64, Castle=128, Capture=256, Check=512};
@@ -38,6 +40,8 @@ namespace OFFSET
     constexpr int MAX_OFFSETS = 5;
 
     constexpr int MAX_SIDE = 2;
+
+    constexpr int RAY_BITS = 8;
 };
 
 /* ---------------------------------------------------------------------------- */

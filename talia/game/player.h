@@ -25,6 +25,7 @@ struct Player
 namespace PLAYER
 {
     constexpr int MAX_PLAYERS = 4;
+    constexpr int PLAYER_BITS = 2;
 
     Player PLAYER_LIST[MAX_PLAYERS] = {Player(Red),Player(Blue),Player(Yellow),Player(Green)};
 
