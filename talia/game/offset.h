@@ -11,12 +11,6 @@ enum Flag {Null=0, Push=1, DoublePush=2, SideWays, Advance=4, Enpassant=8, Promo
 
 enum Side {Neither=-1, KingSide=0, QueenSide=1};
 
-struct Ray
-{
-    Offset rank;
-    Offset file;
-};
-
 struct Direction
 {
     Offset rank;
@@ -42,6 +36,8 @@ namespace OFFSET
     constexpr int MAX_SIDE = 2;
 
     constexpr int RAY_BITS = 8;
+
+    constexpr int SIDE_BITS = 2;
 };
 
 /* ---------------------------------------------------------------------------- */

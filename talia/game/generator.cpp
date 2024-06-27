@@ -28,7 +28,7 @@ void Generator::generate_all_positions(std::vector<Position>& list, const Positi
 
 inline static void Generator::leap(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Move& move: PSEUDO::LEAP[Key(sq,pos.pieces[sq])])
+    for (const Move& move: PSEUDO::LEAP[hashSquarePiece(sq, pos.pieces[sq])])
     {
         make_move(list, pos, move);
     }
@@ -36,9 +36,9 @@ inline static void Generator::leap(std::vector<Position>& list, const Position& 
 
 inline static void Generator::slide(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Offset& offset: PSEUDO::RAY[Key(sq,pos.pieces[sq])])
+    for (const Ray& ray: PSEUDO::RAY[hashSquarePiece(sq, pos.pieces[sq])])
     {
-        for (const Move& move: PSEUDO::SLIDE[Key(sq,pos.pieces[sq],offset)])
+        for (const Move& move: PSEUDO::SLIDE[hashSquarePieceRay(sq, pos.pieces[sq], ray)])
         {
             make_move(list, pos, move);
 
@@ -49,7 +49,7 @@ inline static void Generator::slide(std::vector<Position>& list, const Position&
 
 inline static void Generator::push(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Move& move: PSEUDO::PUSH[Key(sq,pos.pieces[sq],pos.turn)])
+    for (const Move& move: PSEUDO::PUSH[hashSquarePiecePlayer(sq, pos.pieces[sq], pos.turn)])
     {
         if (pos.pieces[move.to] == Empty)
         {
@@ -71,7 +71,7 @@ inline static void Generator::push(std::vector<Position>& list, const Position& 
 
 inline static void Generator::advance(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
-    for (const Move& move: PSEUDO::ADVANCE[Key(sq,pos.pieces[sq],pos.turn)])
+    for (const Move& move: PSEUDO::ADVANCE[hashSquarePiecePlayer(sq, pos.pieces[sq], pos.turn)])
     {
         if (pos.pieces[move.to] != Empty)
         {
@@ -101,18 +101,18 @@ inline static void Generator::castle(std::vector<Position>& list, const Position
         if (pos.rights[pos.turn][side] == false) continue;
 
         /* empty squares */
-        for (const Square& sq: PSEUDO::PASSING_SQUARES[hash(pos.turn, side)])
+        for (const Square& sq: PSEUDO::PASSING_SQUARES[hashPlayerSide(pos.turn, side)])
         {
             if (pos.pieces[sq] != Empty) continue;
         }
 
         /* safe squares */
-        for (const Square& sq: PSEUDO::SECURE_SQUARES[hash(pos.turn, side)])
+        for (const Square& sq: PSEUDO::SECURE_SQUARES[hashPlayerSide(pos.turn, side)])
         {
             if (!isSquareSafe(pos, sq)) continue;
         }
 
-        make_move(list, pos, PSEUDO::CASTLE[hash(pos.turn, side)]);
+        make_move(list, pos, PSEUDO::CASTLE[hashPlayerSide(pos.turn, side)]);
     }
 }
 

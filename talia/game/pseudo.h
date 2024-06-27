@@ -10,7 +10,7 @@ typedef int Key;
 
 #define hashPlayerSide(player, side) (player << OFFSET::SIDE_BITS ^ side)
 #define hashSquarePiece(square, piece) (square << PIECE::PIECE_BITS ^ piece)
-#define hashSquarePieceOffset(square, piece, ray) (((square << PIECE::PIECE_BITS ^ piece) << OFFSET::RAY_BITS) ^ ray)
+#define hashSquarePieceRay(square, piece, ray) (((square << PIECE::PIECE_BITS ^ piece) << OFFSET::RAY_BITS) ^ ray)
 #define hashSquarePiecePlayer(square, piece, player) (((square << PIECE::PIECE_BITS ^ piece) << PLAYER::PLAYER_BITS) ^ player)
 
 /* ---------------------------------------------------------------------------- */
@@ -27,7 +27,7 @@ namespace PSEUDO
     std::unordered_map<Key, std::vector<Square>> SECURE_SQUARES;
     std::unordered_map<Key, std::vector<Square>> PASSING_SQUARES;
 
-    std::unordered_map<Key, std::vector<Offset>> RAY;
+    std::unordered_map<Key, std::vector<Ray>> RAY;
 
 
 
