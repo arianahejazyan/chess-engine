@@ -40,6 +40,8 @@ namespace BOARD
 
     constexpr int BOARD_SIZE = ROW_SIZE * COL_SIZE;
 
+    constexpr int SQUARE_BITS = 8;
+
     int HOME_RANK;
 
     int PROMOTION_RANK;

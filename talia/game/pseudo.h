@@ -6,20 +6,12 @@
 
 /* ---------------------------------------------------------------------------- */
 
-struct Key
-{
-    Square sq;
-    Piece piece;
-    Offset offset;
-    Color player;
-    Side side;
-    
-    Key(Square sq, Piece piece);
-    Key(Square sq, Piece piece, Offset rank, Offset file);
-    Key(Square sq, Piece piece, Color player);
-};
+typedef int Key;
 
-#define hash(player, side) (player * OFFSET::MAX_SIDE + side)
+#define hashPlayerSide(player, side) (player << OFFSET::SIDE_BITS ^ side)
+#define hashSquarePiece(square, piece) (square << PIECE::PIECE_BITS ^ piece)
+#define hashSquarePieceOffset(square, piece, ray) (((square << PIECE::PIECE_BITS ^ piece) << OFFSET::RAY_BITS) ^ ray)
+#define hashSquarePiecePlayer(square, piece, player) (((square << PIECE::PIECE_BITS ^ piece) << PLAYER::PLAYER_BITS) ^ player)
 
 /* ---------------------------------------------------------------------------- */
 
@@ -30,10 +22,10 @@ namespace PSEUDO
     std::unordered_map<Key, std::vector<Move>> PUSH;
     std::unordered_map<Key, std::vector<Move>> ADVANCE;
 
-    std::unordered_map<int, Move> CASTLE;
+    std::unordered_map<Key, Move> CASTLE;
 
-    std::unordered_map<int, std::vector<Square>> SECURE_SQUARES;
-    std::unordered_map<int, std::vector<Square>> PASSING_SQUARES;
+    std::unordered_map<Key, std::vector<Square>> SECURE_SQUARES;
+    std::unordered_map<Key, std::vector<Square>> PASSING_SQUARES;
 
     std::unordered_map<Key, std::vector<Offset>> RAY;
 

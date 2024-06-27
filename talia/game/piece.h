@@ -13,6 +13,7 @@ enum Piece {Brick=-1, Empty=0, King=1, Queen=2, Rook=3, Bishop=4, Knight=5, Pawn
 namespace PIECE
 {
     constexpr int MAX_PIECES = 6;
+    constexpr int PIECE_BITS = 3;
 
     std::unordered_map<Piece, std::vector<Direction>> DIRECTIONS;
 
