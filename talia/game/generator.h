@@ -19,7 +19,7 @@ namespace Generator
 
     inline static void advance(std::vector<Position>& list, const Position& pos, const Square& sq);
 
-    inline static void enpassant(std::vector<Position>& list, const Position& pos);
+    inline static void enpassant(std::vector<Position>& list, const Position& pos, const Square& sq, const Square& loc);
 
     inline static void castle(std::vector<Position>& list, const Position& pos);
 

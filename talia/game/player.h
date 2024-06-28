@@ -35,6 +35,8 @@ namespace PLAYER
 
     bool TEAMMATE[MAX_PLAYERS][MAX_PLAYERS];
     bool OPPONENT[MAX_PLAYERS][MAX_PLAYERS];
+
+    std::vector<Color> OTHERS[MAX_PLAYERS];
 };
 
 /* ---------------------------------------------------------------------------- */
