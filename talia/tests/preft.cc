@@ -1,38 +1,45 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
-//#include "generator.h"
-//#include "move.h"
-//#include "position.h"
-//#include "record.h"
-
-using namespace std;
-using namespace std::chrono;
+#include "generator.h"
+#include "record.h"
 
 /* ---------------------------------------------------------------------------- */
 
-int preft(const Position& pos, int depth, int& nodes, int& time)
+typedef std::chrono::high_resolution_clock::time_point Time;
+
+/* ---------------------------------------------------------------------------- */
+
+#define currTime() (std::chrono::high_resolution_clock::now())
+
+#define duration(tic, toc) (std::chrono::duration_cast<std::chrono::milliseconds>(toc - tic))
+
+/* ---------------------------------------------------------------------------- */
+
+void preft(const std::vector<Position>& positions, std::vector<Record>& records, std::vector<Time>& durations, int max_depth, int curr_depth=0)
 {
-    if (depth != 0)
+    if (curr_depth <= max_depth)
     {
-        vector<Position> list;
+        std::vector<Position> list;
 
-        auto start = high_resolution_clock::now();
-
-        generator.generate_all_positions(pos, list);
-
-        auto stop = high_resolution_clock::now();
-
-        auto duration = duration_cast<milliseconds>(stop - start);
-
-        time += duration;
-
-        nodes += list.size();
-
-        for (const Position& child: list)
+        for (const Position& pos: positions)
         {
-            if (GameState == ongoing) preft(child, depth - 1, time);
+            std::vector<Position> temp;
+
+            Time tic = currTime();
+
+            GENERATOR::generate_all_positions(temp, pos);
+
+            Time toc = currTime();
+
+            list.insert(list.end(), temp.begin(), temp.end());
+
+            durations[curr_depth] += duration(tic, toc);        
         }
+
+        RECORD::updateRecord(list, records[curr_depth]);
+
+        preft(list, records, durations, max_depth, curr_depth + 1);
     }
 }
 
