@@ -5,7 +5,7 @@
 
 /* ---------------------------------------------------------------------------- */
 
-namespace Generator
+namespace GENERATOR
 {
     void generate_all_positions(std::vector<Position>& list, const Position& pos);
 

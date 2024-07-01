@@ -4,7 +4,7 @@
 
 /* ---------------------------------------------------------------------------- */
 
-void Generator::generate_all_positions(std::vector<Position>& list, const Position& pos)
+void GENERATOR::generate_all_positions(std::vector<Position>& list, const Position& pos)
 {
     for (const Square& sq: BOARD::VALID_SQUARES)
     {
@@ -24,7 +24,7 @@ void Generator::generate_all_positions(std::vector<Position>& list, const Positi
 
 /* ---------------------------------------------------------------------------- */
 
-inline static void Generator::leap(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void GENERATOR::leap(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
     for (const Move& move: PSEUDO::LEAP[hashSquarePiece(sq, pos.pieces[sq])])
     {
@@ -32,7 +32,7 @@ inline static void Generator::leap(std::vector<Position>& list, const Position& 
     }
 }
 
-inline static void Generator::slide(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void GENERATOR::slide(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
     for (const Ray& ray: PSEUDO::RAY[hashSquarePiece(sq, pos.pieces[sq])])
     {
@@ -45,7 +45,7 @@ inline static void Generator::slide(std::vector<Position>& list, const Position&
     }
 }
 
-inline static void Generator::push(std::vector<Position>& list, const Position& pos, const Square& sq)
+inline static void GENERATOR::push(std::vector<Position>& list, const Position& pos, const Square& sq)
 {
     for (const Move& move: PSEUDO::PUSH[hashSquarePiecePlayer(sq, pos.pieces[sq], pos.turn)])
     {
@@ -83,7 +83,7 @@ inline static void Generator::advance(std::vector<Position>& list, const Positio
     }
 }
 
-inline static void Generator::enpassant(std::vector<Position>& list, const Position& pos, const Square& sq, const Square& loc)
+inline static void GENERATOR::enpassant(std::vector<Position>& list, const Position& pos, const Square& sq, const Square& loc)
 {
     for (const Color& player: PLAYER::OTHERS[pos.turn])
     {
@@ -97,7 +97,7 @@ inline static void Generator::enpassant(std::vector<Position>& list, const Posit
     }
 }
 
-inline static void Generator::castle(std::vector<Position>& list, const Position& pos)
+inline static void GENERATOR::castle(std::vector<Position>& list, const Position& pos)
 {
     for (const Side& side: {KingSide, QueenSide})
     {
@@ -120,14 +120,14 @@ inline static void Generator::castle(std::vector<Position>& list, const Position
     }
 }
 
-inline static void Generator::pass(std::vector<Position>& list, const Position& pos)
+inline static void GENERATOR::pass(std::vector<Position>& list, const Position& pos)
 {
     if (Config::allow_passing) make_move(list, pos, Move());
 }
 
 /* ---------------------------------------------------------------------------- */
 
-static void Generator::make_move(std::vector<Position>& list, const Position& previous, const Move& move)
+static void GENERATOR::make_move(std::vector<Position>& list, const Position& previous, const Move& move)
 {
     /* make copy of position */
     Position pos(previous);
@@ -201,13 +201,13 @@ static void Generator::make_move(std::vector<Position>& list, const Position& pr
 
 /* ---------------------------------------------------------------------------- */
 
-inline static void Generator::place(Position& pos, const Square& sq, const Piece& piece, const Color& player)
+inline static void GENERATOR::place(Position& pos, const Square& sq, const Piece& piece, const Color& player)
 {
     pos.pieces[sq] = piece;
     pos.players[sq] = player;
 }
 
-inline static void Generator::remove(Position& pos, const Square& sq)
+inline static void GENERATOR::remove(Position& pos, const Square& sq)
 {
     pos.pieces[sq] = Empty;
     pos.players[sq] = None;
@@ -215,12 +215,12 @@ inline static void Generator::remove(Position& pos, const Square& sq)
 
 /* ---------------------------------------------------------------------------- */
 
-inline static bool Generator::isRoyalSafe(const Position& pos)
+inline static bool GENERATOR::isRoyalSafe(const Position& pos)
 {
     return Config::capture_the_king || (pos.safty[pos.turn] == 0);
 }
 
-inline static bool Generator::isSquareSafe(const Position& pos, const Square& sq)
+inline static bool GENERATOR::isSquareSafe(const Position& pos, const Square& sq)
 {
     if (attackedByLeap(pos, sq) != 0) return false;
     if (attackedBySlide(pos, sq) != 0) return false;
@@ -229,7 +229,7 @@ inline static bool Generator::isSquareSafe(const Position& pos, const Square& sq
     return true;
 }
 
-inline static unsigned short Generator::countRoyalChecks(Position& pos, const Color& player)
+inline static unsigned short GENERATOR::countRoyalChecks(Position& pos, const Color& player)
 {
     unsigned short count = 0;
 
@@ -240,7 +240,7 @@ inline static unsigned short Generator::countRoyalChecks(Position& pos, const Co
     return count;
 }
 
-inline static unsigned short Generator::attackedByLeap(const Position& pos, const Square& sq)
+inline static unsigned short GENERATOR::attackedByLeap(const Position& pos, const Square& sq)
 {
     unsigned short count = 0;
     for (const std::pair<Offset, Square>& pair: PSEUDO::LEAP_OFFSETS[sq])
@@ -255,7 +255,7 @@ inline static unsigned short Generator::attackedByLeap(const Position& pos, cons
     return count;
 }
 
-inline static unsigned short Generator::attackedBySlide(const Position& pos, const Square& sq)
+inline static unsigned short GENERATOR::attackedBySlide(const Position& pos, const Square& sq)
 {
     unsigned short count = 0;
     for (const Offset& offset: PSEUDO::SLIDE_OFFSETS[sq])
@@ -277,7 +277,7 @@ inline static unsigned short Generator::attackedBySlide(const Position& pos, con
     return count;
 }
 
-inline static unsigned short Generator::attackedByAdvance(const Position& pos, const Square& sq)
+inline static unsigned short GENERATOR::attackedByAdvance(const Position& pos, const Square& sq)
 {
     unsigned short count = 0;
     for (const Color& opponent: PLAYER::OPPONENT_LIST[pos.turn])
