@@ -3,7 +3,7 @@
 
 /* ---------------------------------------------------------------------------- */
 
-void Pseudo::init()
+void PSEUDO::init()
 {
     for (const Square& sq: BOARD::VALID_SQUARES)
     {
@@ -13,11 +13,10 @@ void Pseudo::init()
             {
                 switch (dir.flag)
                 {
-                    case (Leap):     Pseudo::leap(sq, piece, dir);     break;
-                    case (Slide):    Pseudo::slide(sq, piece, dir);    break;
-                    case (Push):     Pseudo::push(sq, piece, dir);     break;
-                    case (SideWays): Pseudo::sideways(sq, piece, dir); break;
-                    case (Advance):  Pseudo::advance(sq, piece, dir);  break;
+                    case (Leap):     leap(sq, piece, dir);     break;
+                    case (Slide):    slide(sq, piece, dir);    break;
+                    case (Push):     push(sq, piece, dir);     break;
+                    case (Advance):  advance(sq, piece, dir);  break;
 
                     default: break;
                 }
@@ -25,12 +24,12 @@ void Pseudo::init()
         }
     }
 
-    Pseudo::castle();
+    PSEUDO::castle();
 }
 
 /* ---------------------------------------------------------------------------- */
 
-void Pseudo::leap(const Square& sq, const Piece& piece, const Direction& dir)
+void PSEUDO::leap(const Square& sq, const Piece& piece, const Direction& dir)
 {
     if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
     {
@@ -40,11 +39,11 @@ void Pseudo::leap(const Square& sq, const Piece& piece, const Direction& dir)
         move.piece = piece;
         move.flag = Leap;
 
-        Pseudo::LEAP[Key(sq, piece)].push_back(move);
+        LEAP[Key(sq, piece)].push_back(move);
     }
 }
 
-void Pseudo::slide(const Square& sq, const Piece& piece, const Direction& dir)
+void PSEUDO::slide(const Square& sq, const Piece& piece, const Direction& dir)
 {
     int count = 1;
     while (BOARD::isValidSquare(Rank(sq) + count * dir.rank, File(sq) + count * dir.file))
@@ -55,13 +54,13 @@ void Pseudo::slide(const Square& sq, const Piece& piece, const Direction& dir)
         move.piece = piece;
         move.flag = Slide;
 
-        Pseudo::SLIDE[Key(sq, piece, dir.rank, dir.file)].push_back(move);
+        SLIDE[Key(sq, piece, dir.rank, dir.file)].push_back(move);
 
         count++;
     }
 }
 
-void Pseudo::push(const Square& sq, const Piece& piece, const Direction& dir)
+void PSEUDO::push(const Square& sq, const Piece& piece, const Direction& dir)
 {
     if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
     {
@@ -81,7 +80,7 @@ void Pseudo::push(const Square& sq, const Piece& piece, const Direction& dir)
     }
 }
 
-void Pseudo::advance(const Square& sq, const Piece& piece, const Direction& dir)
+void PSEUDO::advance(const Square& sq, const Piece& piece, const Direction& dir)
 {
     if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
     {
@@ -91,7 +90,7 @@ void Pseudo::advance(const Square& sq, const Piece& piece, const Direction& dir)
     }
 }
 
-void Pseudo::promote(const Square& sq, const Square& loc, const Square& midway, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& TABLE)
+void PSEUDO::promote(const Square& sq, const Square& loc, const Square& midway, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& TABLE)
 {
     if (BOARD::isPromotionSquare(loc, dir.player))
     {
@@ -124,17 +123,9 @@ void Pseudo::promote(const Square& sq, const Square& loc, const Square& midway, 
     }
 }
 
-void Pseudo::castle()
+void PSEUDO::castle()
 {
     
 }
 
-/* ---------------------------------------------------------------------------- */
-/*
-Key::Key(Square sq, Piece piece): sq(sq), piece(piece), offset(S), player(None), side(Neither) {}
-
-Key::Key(Square sq, Piece piece, Offset offset): sq(sq), piece(piece), offset(offset), player(None), side(Neither) {}
-
-Key::Key(Square sq, Piece piece, Color player): sq(sq), piece(piece), offset(S), player(player), side(Neither) {}
-*/
 /* ---------------------------------------------------------------------------- */
