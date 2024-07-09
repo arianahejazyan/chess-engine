@@ -3,7 +3,49 @@
 
 /* ---------------------------------------------------------------------------- */
 
-void PSEUDO::init()
+void PSEUDO::allocate()
+{
+    for (const Square& sq: BOARD::VALID_SQUARES)
+    {
+        for (const Piece& piece: PIECE::PIECE_LIST)
+        {
+            // allocate leap //
+            if (OFFSET::CAN_LEAP(piece))
+            {
+                LEAP[hashSquarePiece(sq, piece)] = std::vector<Move>();
+            }
+
+            // allocate slide //
+            for (const Ray& ray: PSEUDO::RAY[hashSquarePiece(sq, piece)])
+            {
+                SLIDE[hashSquarePieceRay(sq, piece, ray)] = std::vector<Move>();
+            }
+
+            // allocate push and advance //
+            for (const Color& player: PLAYER::COLOR_LIST)
+            {
+                PUSH[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
+                ADVANCE[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
+                ENPASSANT[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
+            }
+        }
+    }
+
+    // allocate castle //
+}
+
+void PSEUDO::deallocate()
+{
+    for (const Square& sq: BOARD::VALID_SQUARES)
+    {
+        for (const Piece& piece: PIECE::PIECE_LIST)
+        {
+            
+        }
+    }
+}
+
+void PSEUDO::initialize()
 {
     for (const Square& sq: BOARD::VALID_SQUARES)
     {
@@ -16,6 +58,7 @@ void PSEUDO::init()
                     case (Leap):     leap(sq, piece, dir);     break;
                     case (Slide):    slide(sq, piece, dir);    break;
                     case (Push):     push(sq, piece, dir);     break;
+                    case (SideWays): push(sq, piece, dir);     break;
                     case (Advance):  advance(sq, piece, dir);  break;
 
                     default: break;
@@ -25,23 +68,6 @@ void PSEUDO::init()
     }
 
     PSEUDO::castle();
-}
-
-/* ---------------------------------------------------------------------------- */
-
-inline static void PSEUDO::build()
-{
-
-}
-
-inline static void PSEUDO::destroy()
-{
-
-}
-
-inline static void PSEUDO::fill()
-{
-
 }
 
 /* ---------------------------------------------------------------------------- */

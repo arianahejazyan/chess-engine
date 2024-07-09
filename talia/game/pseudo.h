@@ -24,6 +24,7 @@ namespace PSEUDO
     std::unordered_map<Key, std::vector<Move>> SLIDE;
     std::unordered_map<Key, std::vector<Move>> PUSH;
     std::unordered_map<Key, std::vector<Move>> ADVANCE;
+    std::unordered_map<Key, std::vector<Move>> ENPASSANT;
 
     // contains all castle moves and related squares //
     std::unordered_map<Key, Move> CASTLE;
@@ -63,7 +64,11 @@ namespace PSEUDO
 
     /********************************************************************************/
 
-    void init();
+    void PSEUDO::allocate();
+
+    void PSEUDO::deallocate();
+
+    void PSEUDO::initialize();
 };
 
 /* ---------------------------------------------------------------------------- */
