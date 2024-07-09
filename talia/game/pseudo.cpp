@@ -3,7 +3,49 @@
 
 /* ---------------------------------------------------------------------------- */
 
-void Pseudo::init()
+void PSEUDO::allocate()
+{
+    for (const Square& sq: BOARD::VALID_SQUARES)
+    {
+        for (const Piece& piece: PIECE::PIECE_LIST)
+        {
+            // allocate leap //
+            if (OFFSET::CAN_LEAP(piece))
+            {
+                LEAP[hashSquarePiece(sq, piece)] = std::vector<Move>();
+            }
+
+            // allocate slide //
+            for (const Ray& ray: PSEUDO::RAY[hashSquarePiece(sq, piece)])
+            {
+                SLIDE[hashSquarePieceRay(sq, piece, ray)] = std::vector<Move>();
+            }
+
+            // allocate push and advance //
+            for (const Color& player: PLAYER::COLOR_LIST)
+            {
+                PUSH[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
+                ADVANCE[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
+                ENPASSANT[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
+            }
+        }
+    }
+
+    // allocate castle //
+}
+
+void PSEUDO::deallocate()
+{
+    for (const Square& sq: BOARD::VALID_SQUARES)
+    {
+        for (const Piece& piece: PIECE::PIECE_LIST)
+        {
+            
+        }
+    }
+}
+
+void PSEUDO::initialize()
 {
     for (const Square& sq: BOARD::VALID_SQUARES)
     {
@@ -13,11 +55,11 @@ void Pseudo::init()
             {
                 switch (dir.flag)
                 {
-                    case (Leap):     Pseudo::leap(sq, piece, dir);     break;
-                    case (Slide):    Pseudo::slide(sq, piece, dir);    break;
-                    case (Push):     Pseudo::push(sq, piece, dir);     break;
-                    case (SideWays): Pseudo::sideways(sq, piece, dir); break;
-                    case (Advance):  Pseudo::advance(sq, piece, dir);  break;
+                    case (Leap):     leap(sq, piece, dir);     break;
+                    case (Slide):    slide(sq, piece, dir);    break;
+                    case (Push):     push(sq, piece, dir);     break;
+                    case (SideWays): push(sq, piece, dir);     break;
+                    case (Advance):  advance(sq, piece, dir);  break;
 
                     default: break;
                 }
@@ -25,116 +67,91 @@ void Pseudo::init()
         }
     }
 
-    Pseudo::castle();
+    PSEUDO::castle();
 }
 
 /* ---------------------------------------------------------------------------- */
 
-void Pseudo::leap(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::leap(const Square& sq, const Piece& piece, const Direction& dir)
 {
-    if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
-    {
-        Move move;
-        move.from = sq;
-        move.to = Tile(Rank(sq) + dir.rank, File(sq) + dir.file);
-        move.piece = piece;
-        move.flag = Leap;
+    const Square loc = tile(row(sq) + dir.rank, col(sq) + dir.file);
 
-        Pseudo::LEAP[Key(sq, piece)].push_back(move);
+    if (BOARD::isValidSquare(loc))
+    {
+        Move* move = new Move(sq, loc, piece, Leap);
+
+        LEAP[hashSquarePiece(sq, piece)].push_back(*move);
     }
 }
 
-void Pseudo::slide(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::slide(const Square& sq, const Piece& piece, const Direction& dir)
 {
-    int count = 1;
-    while (BOARD::isValidSquare(Rank(sq) + count * dir.rank, File(sq) + count * dir.file))
+    Square loc = tile(row(sq) + dir.rank, col(sq) + dir.file);
+
+    while (BOARD::isValidSquare(loc))
     {
-        Move move;
-        move.from = sq;
-        move.to = Tile(Rank(sq) + dir.rank, File(sq) + dir.file);
-        move.piece = piece;
-        move.flag = Slide;
+        Move* move = new Move(sq, loc, piece, Slide);
 
-        Pseudo::SLIDE[Key(sq, piece, dir.rank, dir.file)].push_back(move);
+        SLIDE[hashSquarePieceRay(sq, piece, tile(dir.rank, dir.file))].push_back(*move);
 
-        count++;
+        loc = tile(row(loc) + dir.rank, col(loc) + dir.file);
     }
 }
 
-void Pseudo::push(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::push(const Square& sq, const Piece& piece, const Direction& dir)
 {
-    if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
-    {
-        Square midway = Tile(Rank(sq) + dir.rank, File(sq) + dir.file);
+    const Square midway = tile(row(sq) + dir.rank, col(sq) + dir.file);
 
+    if (BOARD::isValidSquare(midway))
+    {
         promote(sq, midway, X, piece, dir, Push, PUSH);
 
-        if (BOARD::isValidSquare(Rank(sq) + 2 * dir.rank, File(sq) + 2 * dir.file))
+        if (dir.flag & Push)
         {
-            Square loc = Tile(Rank(sq) + 2 * dir.rank, File(sq) + 2 * dir.file);
+            const Square target = tile(row(sq) + 2 * dir.rank, col(sq) + 2 * dir.file);
 
-            if (BOARD::isHomeRankSquare(sq, dir.player))
+            if (BOARD::isValidSquare(target) && (CONFIG::torpedo || BOARD::isHomeRankSquare(sq, dir.player)))
             {
-                promote(sq, loc, midway, piece, dir, DoublePush, PUSH);
+                promote(sq, target, midway, piece, dir, DoublePush, PUSH);
             }
         }
     }
 }
 
-void Pseudo::advance(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::advance(const Square& sq, const Piece& piece, const Direction& dir)
 {
-    if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
-    {
-        Square loc = Tile(Rank(sq) + dir.rank, File(sq) + dir.file);
+    const Square loc = tile(row(sq) + dir.rank, col(sq) + dir.file);
 
+    if (BOARD::isValidSquare(loc) && CONFIG::enpassant)
+    {
         promote(sq, loc, X, piece, dir, Advance, ADVANCE);
+        promote(sq, loc, X, piece, dir, Enpassant, ENPASSANT);
     }
 }
 
-void Pseudo::promote(const Square& sq, const Square& loc, const Square& midway, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& TABLE)
+inline static void PSEUDO::promote(const Square& sq, const Square& loc, const Square& marked, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& TABLE)
 {
     if (BOARD::isPromotionSquare(loc, dir.player))
     {
         for (const Piece& promote: PIECE::PROMOTION_LIST)
         {
-            Move move;
-            move.from = sq;
-            move.to = loc;
-            move.midway = midway;
-            move.piece = piece;
-            move.player = dir.player;
-            move.promotion = promote;
-            move.flag = static_cast<Flag>(flag ^ Promotion);
+            Move* move = new Move(sq, loc, piece, dir.player, promote, marked, static_cast<Flag>(flag ^ Promotion));
 
-            TABLE[Key(sq, piece, dir.player)].push_back(move);
+            TABLE[hashSquarePiecePlayer(sq, piece, dir.player)].push_back(*move);
         }
     }
 
     else
     {
-        Move move;
-        move.from = sq;
-        move.to = loc;
-        move.midway = midway;
-        move.piece = piece;
-        move.player = dir.player;
-        move.flag = flag;
+        Move* move = new Move(sq, loc, piece, dir.player, Empty, marked, flag);
 
-        TABLE[Key(sq, piece, dir.player)].push_back(move);
+        TABLE[hashSquarePiecePlayer(sq, piece, dir.player)].push_back(*move);
     }
 }
 
-void Pseudo::castle()
+inline static void PSEUDO::castle()
 {
     
 }
 
-/* ---------------------------------------------------------------------------- */
-/*
-Key::Key(Square sq, Piece piece): sq(sq), piece(piece), offset(S), player(None), side(Neither) {}
-
-Key::Key(Square sq, Piece piece, Offset offset): sq(sq), piece(piece), offset(offset), player(None), side(Neither) {}
-
-Key::Key(Square sq, Piece piece, Color player): sq(sq), piece(piece), offset(S), player(player), side(Neither) {}
-*/
 /* ---------------------------------------------------------------------------- */

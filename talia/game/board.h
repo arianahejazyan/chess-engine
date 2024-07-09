@@ -24,9 +24,9 @@ enum Square
 
 /* ---------------------------------------------------------------------------- */
 
-#define Rank(sq) (sq / BOARD::COL_SIZE)
-#define File(sq) (sq % BOARD::COL_SIZE)
-#define Tile(r,f) (static_cast<Square>(r * BOARD::ROW_SIZE + f))
+#define row(sq) (sq / BOARD::COL_SIZE)
+#define col(sq) (sq % BOARD::COL_SIZE)
+#define tile(r,f) (static_cast<Square>(r * BOARD::ROW_SIZE + f))
 
 /* ---------------------------------------------------------------------------- */
 
@@ -63,6 +63,8 @@ namespace BOARD
     bool isHomeRankSquare(const Square& sq, const Color& player);
 
     bool isValidSquare(int r, int f);
+
+    bool isValidSquare(const Square& sq);
 
     void init();
 };

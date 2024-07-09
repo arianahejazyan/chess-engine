@@ -84,6 +84,8 @@ void PIECE::initPieceDirections()
     };
 }
 
+/* ---------------------------------------------------------------------------- */
+
 void PIECE::initPromotionList(std::initializer_list<Piece> list)
 {
     PIECE::PROMOTION_LIST = list;
