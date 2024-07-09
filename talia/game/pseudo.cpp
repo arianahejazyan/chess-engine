@@ -29,7 +29,7 @@ void PSEUDO::init()
 
 /* ---------------------------------------------------------------------------- */
 
-void PSEUDO::leap(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::leap(const Square& sq, const Piece& piece, const Direction& dir)
 {
     if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
     {
@@ -43,7 +43,7 @@ void PSEUDO::leap(const Square& sq, const Piece& piece, const Direction& dir)
     }
 }
 
-void PSEUDO::slide(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::slide(const Square& sq, const Piece& piece, const Direction& dir)
 {
     int count = 1;
     while (BOARD::isValidSquare(Rank(sq) + count * dir.rank, File(sq) + count * dir.file))
@@ -60,7 +60,7 @@ void PSEUDO::slide(const Square& sq, const Piece& piece, const Direction& dir)
     }
 }
 
-void PSEUDO::push(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::push(const Square& sq, const Piece& piece, const Direction& dir)
 {
     if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
     {
@@ -80,7 +80,7 @@ void PSEUDO::push(const Square& sq, const Piece& piece, const Direction& dir)
     }
 }
 
-void PSEUDO::advance(const Square& sq, const Piece& piece, const Direction& dir)
+inline static void PSEUDO::advance(const Square& sq, const Piece& piece, const Direction& dir)
 {
     if (BOARD::isValidSquare(Rank(sq) + dir.rank, File(sq) + dir.file))
     {
@@ -90,7 +90,7 @@ void PSEUDO::advance(const Square& sq, const Piece& piece, const Direction& dir)
     }
 }
 
-void PSEUDO::promote(const Square& sq, const Square& loc, const Square& midway, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& TABLE)
+inline static void PSEUDO::promote(const Square& sq, const Square& loc, const Square& midway, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& TABLE)
 {
     if (BOARD::isPromotionSquare(loc, dir.player))
     {
@@ -123,7 +123,7 @@ void PSEUDO::promote(const Square& sq, const Square& loc, const Square& midway, 
     }
 }
 
-void PSEUDO::castle()
+inline static void PSEUDO::castle()
 {
     
 }

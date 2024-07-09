@@ -49,17 +49,19 @@ namespace PSEUDO
 
     /********************************************************************************/
 
-    void leap(const Square& sq, const Piece& piece, const Direction& dir);
+    inline static void leap(const Square& sq, const Piece& piece, const Direction& dir);
 
-    void slide(const Square& sq, const Piece& piece, const Direction& dir);
+    inline static void slide(const Square& sq, const Piece& piece, const Direction& dir);
 
-    void push(const Square& sq, const Piece& piece, const Direction& dir);
+    inline static void push(const Square& sq, const Piece& piece, const Direction& dir);
 
-    void advance(const Square& sq, const Piece& piece, const Direction& dir);
+    inline static void advance(const Square& sq, const Piece& piece, const Direction& dir);
 
-    void promote(const Square& sq, const Square& loc, const Square& tile, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& table);
+    inline static void promote(const Square& sq, const Square& loc, const Square& tile, const Piece& piece, const Direction& dir, const Flag& flag, std::unordered_map<Key, std::vector<Move>>& table);
 
-    void castle();
+    inline static void castle();
+
+    /********************************************************************************/
 
     void init();
 };
