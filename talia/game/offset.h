@@ -11,16 +11,6 @@ enum Flag {Null=0, Push=1, DoublePush=2, SideWays, Advance=4, Enpassant=8, Promo
 
 enum Side {Neither=-1, KingSide=0, QueenSide=1};
 
-struct Direction
-{
-    Offset rank;
-    Offset file;
-    Color player;
-    Flag flag;
-
-    Direction(Offset rank, Offset file, Color player, Flag flag);
-};
-
 /* ---------------------------------------------------------------------------- */
 
 Offset operator*(int count, Offset offset);
