@@ -12,11 +12,13 @@ struct Move
     Piece piece;
     Color player;
     Piece promotion;
-    Square midway;
+    Square marked;
     Side side;
     Flag flag;
 
     Move();
+    Move(const Square& from, const Square& to, const Piece& piece, Flag flag);
+    Move(const Square& from, const Square& to, const Piece& piece, const Color& player, const Piece& promotion, const Square& marked, Flag flag);
 };
 
 /* ---------------------------------------------------------------------------- */

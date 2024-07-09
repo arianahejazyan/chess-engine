@@ -14,7 +14,7 @@ enum Mode {4PC, 2PC};
 
 /* ---------------------------------------------------------------------------- */
 
-namespace Config
+namespace CONFIG
 {
     bool allow_passing;
     bool sideways;
