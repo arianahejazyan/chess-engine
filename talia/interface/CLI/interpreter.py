@@ -1,9 +1,4 @@
 import re
-#from ..parsers.piece_parser import PieceParser
-
-RED = "\033[1;31m" 
-GREEN = "\033[1;32m"
-RESET = "\033[0m"
 
 Success, Error = True, False
 
