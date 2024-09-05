@@ -129,7 +129,9 @@ class Interpreter:
             'modern',
             'classic',
             'ffa',
-            'traditional'
+            'traditional',
+            '2pc',
+            '4pc'
         ]
 
         self.window_registry = {
