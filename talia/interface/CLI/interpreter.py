@@ -1,6 +1,6 @@
 import re
 
-Success, Error = True, False
+Success, Error = 0, 1
 
 def handle_error(func):
     def wrapper(*args, **kawrgs):
@@ -85,13 +85,11 @@ display_options = [
     'board'
 ]
 
-#@log_output
+
 def validate_option(func):
     def wrapper(self, option):
-        if option in display_option:
-            func
-            return
-        return 
+        func(self, option)
+        return Result(Success, [])
     return wrapper
 
 #@log_output
@@ -108,8 +106,8 @@ def validate_parameter_value(func):
 
 
 class Result:
-    def __init__(self, error, message):
-        self.error = error
+    def __init__(self, flag, message):
+        self.flag = flag
         self.message = message
 
 
@@ -163,14 +161,12 @@ class Interpreter:
         func, args = self.registry[parts[0]], parts[1:]
         return func(*args)
 
-    @handle_error
     def _exit(self):
-        self.app.command_line.running = False
-        return 'exit success!'
+        QApplication.quit()
     
     @validate_option
     def _display(self, option):
-        return f'{option} displayed!'
+        pass
     
     @validate_parameter_value
     def _set(self, parameter, value):
