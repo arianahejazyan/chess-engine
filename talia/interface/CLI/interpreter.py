@@ -104,6 +104,13 @@ def validate_parameter_value(func):
         return 
     return wrapper
 
+def validate_setup(func):
+    def wrapper(self, setup = 'custom'):
+        if setup in self.setup_registry:
+            func(self, setup)
+            return Result(Success, [])
+        return Result(Error, 'unknown setup!')
+    return wrapper
 
 class Result:
     def __init__(self, flag, message):
@@ -116,6 +123,14 @@ class Interpreter:
     def __init__(self, app):
 
         self.app = app
+
+        self.setup_registry = [
+            'custom',
+            'modern',
+            'classic',
+            'ffa',
+            'traditional'
+        ]
 
         self.window_registry = {
             'analyze': self.app.analyze_window,
@@ -183,6 +198,6 @@ class Interpreter:
         else:
             window.show()
 
-    @handle_error
+    @validate_setup
     def _config(self, setup = 'custom'):
-        return f'{setup} has been configured!'
+        pass
