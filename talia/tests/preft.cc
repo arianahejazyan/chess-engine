@@ -2,19 +2,14 @@
 #include <chrono>
 #include <vector>
 #include "generator.h"
-#include "record.h"
 
-/* ---------------------------------------------------------------------------- */
-
+/*
 typedef std::chrono::high_resolution_clock::time_point Time;
 
-/* ---------------------------------------------------------------------------- */
 
 #define currTime() (std::chrono::high_resolution_clock::now())
 
 #define duration(tic, toc) (std::chrono::duration_cast<std::chrono::milliseconds>(toc - tic))
-
-/* ---------------------------------------------------------------------------- */
 
 void preft(const std::vector<Position>& positions, std::vector<Record>& records, std::vector<Time>& durations, int max_depth, int curr_depth=0)
 {
@@ -43,8 +38,6 @@ void preft(const std::vector<Position>& positions, std::vector<Record>& records,
     }
 }
 
-/* ---------------------------------------------------------------------------- */
-
 int main()
 {
     Position pos = Position::Standard();
@@ -60,5 +53,4 @@ int main()
 
     return 0;
 }
-
-/* ---------------------------------------------------------------------------- */
+*/
