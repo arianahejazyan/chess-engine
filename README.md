@@ -6,6 +6,10 @@
 
 </div>
 
+## Introduction
+<div align="center">
+<img src="./talia/assets/images/four-player-chess.png" alt="Talia"/>
+</div>
 
 ## Overview
 *coming soon ...*
