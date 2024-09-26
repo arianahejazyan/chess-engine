@@ -1,6 +1,19 @@
 import re
+import webbrowser
 
 Success, Error = 0, 1
+
+def handle_exception(func):
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            if result == None:
+                return Result(Success, '')
+            else:
+                return result
+        except Exception as e:
+            return Result(Error, 'failed to execute properly: ' + e)
+    return wrapper
 
 def handle_error(func):
     def wrapper(*args, **kawrgs):
@@ -129,7 +142,9 @@ class Interpreter:
             'modern',
             'classic',
             'ffa',
-            'traditional'
+            'traditional',
+            '2pc',
+            '4pc'
         ]
 
         self.window_registry = {
@@ -143,7 +158,8 @@ class Interpreter:
             re.compile(r'^display\s(\w+)$'),
             re.compile(r'^set\s(\w+)\s(\w+)$'),
             re.compile(r'^config(\s\w+)?$'),
-            re.compile(r'^toggle(\s+)(\w+)')
+            re.compile(r'^toggle(\s+)(\w+)'),
+            re.compile(r'^help$')
         }
 
         self.registry = {
@@ -151,7 +167,8 @@ class Interpreter:
             'display': self._display,
             'set': self._set,
             'config': self._config,
-            'toggle': self._toggle
+            'toggle': self._toggle,
+            'help': lambda: self._open_url('https://github.com/arianahejazyan/chess-engine/wiki')
         }
 
     def handle_output(func):
@@ -201,3 +218,7 @@ class Interpreter:
     @validate_setup
     def _config(self, setup = 'custom'):
         pass
+
+    @handle_exception
+    def _open_url(self, url):
+        webbrowser.open(url)
