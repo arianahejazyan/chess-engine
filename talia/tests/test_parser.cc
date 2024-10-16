@@ -42,6 +42,39 @@ TEST_F(ParserTest, SplitBoard)
 
     ASSERT_EQ(parts, expected);
 }
+
+TEST_F(ParserTest, ParsePiece)
+{
+    Piece piece;
+
+    EXPECT_TRUE(parse_piece('P', piece));
+    EXPECT_EQ(piece, Pawn);
+
+    EXPECT_TRUE(parse_piece('N', piece));
+    EXPECT_EQ(piece, Knight);
+
+    EXPECT_TRUE(parse_piece('B', piece));
+    EXPECT_EQ(piece, Bishop);
+
+    EXPECT_TRUE(parse_piece('R', piece));
+    EXPECT_EQ(piece, Rook);
+
+    EXPECT_TRUE(parse_piece('Q', piece));
+    EXPECT_EQ(piece, Queen);
+
+    EXPECT_TRUE(parse_piece('K', piece));
+    EXPECT_EQ(piece, King);
+}
+
+TEST_F(ParserTest, ParsePieceError)
+{
+    Piece piece;
+
+    EXPECT_FALSE(parse_piece(' ', piece));
+    EXPECT_FALSE(parse_piece('A', piece));
+    EXPECT_FALSE(parse_piece('$', piece));
+}
+
 /*
 TEST_F(ParserTest, ParseBoard)
 {
