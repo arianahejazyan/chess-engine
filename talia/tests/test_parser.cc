@@ -14,6 +14,19 @@ class ParserTest: public ::testing::Test
         Position modern;*/
 };
 
+TEST_F(ParserTest, IsInteger)
+{
+    EXPECT_TRUE(is_integer("3645"));
+}
+
+TEST_F(ParserTest, IsIntegerError)
+{
+    EXPECT_FALSE(is_integer(""));
+    EXPECT_FALSE(is_integer("+23"));
+    EXPECT_FALSE(is_integer("65a3"));
+    EXPECT_FALSE(is_integer("@ds2"));
+}
+
 TEST_F(ParserTest, SplitString)
 {
     vector<string> parts = split_string("32, one,, @ ,x2z", ',');
