@@ -14,6 +14,19 @@ class ParserTest: public ::testing::Test
         Position modern;*/
 };
 
+TEST_F(ParserTest, IsInteger)
+{
+    EXPECT_TRUE(is_integer("3645"));
+}
+
+TEST_F(ParserTest, IsIntegerError)
+{
+    EXPECT_FALSE(is_integer(""));
+    EXPECT_FALSE(is_integer("+23"));
+    EXPECT_FALSE(is_integer("65a3"));
+    EXPECT_FALSE(is_integer("@ds2"));
+}
+
 TEST_F(ParserTest, SplitString)
 {
     vector<string> parts = split_string("32, one,, @ ,x2z", ',');
@@ -29,6 +42,65 @@ TEST_F(ParserTest, SplitBoard)
 
     ASSERT_EQ(parts, expected);
 }
+
+TEST_F(ParserTest, ParsePiece)
+{
+    Piece piece;
+
+    EXPECT_TRUE(parse_piece('P', piece));
+    EXPECT_EQ(piece, Pawn);
+
+    EXPECT_TRUE(parse_piece('N', piece));
+    EXPECT_EQ(piece, Knight);
+
+    EXPECT_TRUE(parse_piece('B', piece));
+    EXPECT_EQ(piece, Bishop);
+
+    EXPECT_TRUE(parse_piece('R', piece));
+    EXPECT_EQ(piece, Rook);
+
+    EXPECT_TRUE(parse_piece('Q', piece));
+    EXPECT_EQ(piece, Queen);
+
+    EXPECT_TRUE(parse_piece('K', piece));
+    EXPECT_EQ(piece, King);
+}
+
+TEST_F(ParserTest, ParsePieceError)
+{
+    Piece piece;
+
+    EXPECT_FALSE(parse_piece(' ', piece));
+    EXPECT_FALSE(parse_piece('A', piece));
+    EXPECT_FALSE(parse_piece('$', piece));
+}
+
+TEST_F(ParserTest, ParsePlayer)
+{
+    Player player;
+
+    EXPECT_TRUE(parse_player('r', player));
+    EXPECT_EQ(player, Red);
+
+    EXPECT_TRUE(parse_player('b', player));
+    EXPECT_EQ(player, Blue);
+
+    EXPECT_TRUE(parse_player('y', player));
+    EXPECT_EQ(player, Yellow);
+
+    EXPECT_TRUE(parse_player('g', player));
+    EXPECT_EQ(player, Green);
+}
+
+TEST_F(ParserTest, ParsePlayerError)
+{
+    Player player;
+
+    EXPECT_FALSE(parse_player(' ', player));
+    EXPECT_FALSE(parse_player('w', player));
+    EXPECT_FALSE(parse_player('#', player));
+}
+
 /*
 TEST_F(ParserTest, ParseBoard)
 {
