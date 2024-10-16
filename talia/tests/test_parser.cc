@@ -75,6 +75,32 @@ TEST_F(ParserTest, ParsePieceError)
     EXPECT_FALSE(parse_piece('$', piece));
 }
 
+TEST_F(ParserTest, ParsePlayer)
+{
+    Player player;
+
+    EXPECT_TRUE(parse_player('r', player));
+    EXPECT_EQ(player, Red);
+
+    EXPECT_TRUE(parse_player('b', player));
+    EXPECT_EQ(player, Blue);
+
+    EXPECT_TRUE(parse_player('y', player));
+    EXPECT_EQ(player, Yellow);
+
+    EXPECT_TRUE(parse_player('g', player));
+    EXPECT_EQ(player, Green);
+}
+
+TEST_F(ParserTest, ParsePlayerError)
+{
+    Player player;
+
+    EXPECT_FALSE(parse_player(' ', player));
+    EXPECT_FALSE(parse_player('w', player));
+    EXPECT_FALSE(parse_player('#', player));
+}
+
 /*
 TEST_F(ParserTest, ParseBoard)
 {
