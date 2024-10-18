@@ -1,10 +1,21 @@
 #include <sstream>
 #include "parser.h"
 #include <iostream>
-using namespace constants;
 
 namespace parser
 {
+
+bool is_integer(const string& str)
+{
+    if (str.empty()) return false;
+
+    for (const char& ch: str)
+    {
+        if (!isdigit(ch)) return false;
+    }
+
+    return true;
+}
 
 vector<string> split_string(const string& str, char delimiter)
 {
@@ -36,6 +47,67 @@ vector<string> split_board(const string& board)
     }
 
     return output;
+}
+
+bool parse_piece(char ch, Piece& piece)
+{
+    switch (ch)
+    {
+        case 'P': piece = Pawn;   break;
+        case 'N': piece = Knight; break;
+        case 'B': piece = Bishop; break;
+        case 'R': piece = Rook;   break;
+        case 'Q': piece = Queen;  break;
+        case 'K': piece = King;   break;
+
+        default: return false;  
+    }
+
+    return true;
+}
+
+bool parse_player(char ch, Player& player)
+{
+    switch (ch)
+    {
+        case 'r': player = Red;    break;
+        case 'b': player = Blue;   break;
+        case 'y': player = Yellow; break;
+        case 'g': player = Green;  break;
+
+        default: return false;
+    }
+
+    return true;
+}
+
+bool parse_board(const string& board, Position& pos)
+{
+    vector<string> parts = split_board(board);
+
+    unsigned int count = 0;
+    for (const string& part: parts)
+    {
+        if (is_integer(part))
+        {
+            count += stoi(part);
+        }
+
+        else if (part.size() >= 2)
+        {
+            Piece piece;
+            Player player;
+
+            if (!parse_player(part[0], player)) continue;
+            if (!parse_piece(part[1], piece)) continue;
+    
+            pos.place(count++, piece, player);
+        }
+
+        if (count >= board_size) break;
+    }
+
+    return count == board_size;
 }
 
 /*
@@ -108,37 +180,7 @@ vector<string> expand(string rank)
 */
 /*
 
-bool char_to_piece(char ch, Piece& piece)
-{
-    switch (ch)
-    {
-        case 'P': piece = Pawn;
-        case 'N': piece = Knight;
-        case 'B': piece = Bishop;
-        case 'R': piece = Rook;
-        case 'Q': piece = Queen;
-        case 'K': piece = King;
 
-        default: return false;  
-    }
-
-    return true;
-}
-
-bool char_to_player(char ch, Player& player)
-{
-    switch (ch)
-    {
-        case 'r': player = Red;
-        case 'b': player = Blue;
-        case 'y': player = Yellow;
-        case 'g': player = Green;
-
-        default: return false;
-    }
-
-    return true;
-}
 
 
 
