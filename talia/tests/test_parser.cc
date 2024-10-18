@@ -4,14 +4,10 @@
 using namespace parser;
 
 class ParserTest: public ::testing::Test
-{/*
+{
     protected:
 
         Position pos;
-
-        string fen;
-
-        Position modern;*/
 };
 
 TEST_F(ParserTest, IsInteger)
@@ -101,12 +97,18 @@ TEST_F(ParserTest, ParsePlayerError)
     EXPECT_FALSE(parse_player('#', player));
 }
 
-/*
 TEST_F(ParserTest, ParseBoard)
 {
+    string board = "2rQ3=,#,x,59,bbN/31,x,9,,@,yP/,wK, v ,gR56,59";
 
+    EXPECT_TRUE(parse_board(board, pos));
+    EXPECT_EQ(pos.pieces[0], Rook);
+    EXPECT_EQ(pos.players[0], Green);
+    EXPECT_EQ(pos.pieces[100], Pawn);
+    EXPECT_EQ(pos.players[100], Yellow);
 }
 
+/*
 
 TEST_F(ParserTest, ParseTurn)
 {
