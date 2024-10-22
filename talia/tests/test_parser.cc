@@ -8,6 +8,9 @@ class ParserTest: public ::testing::Test
     protected:
 
         Position pos;
+
+        int integer;
+        int digit;
 };
 
 TEST_F(ParserTest, IsInteger)
@@ -106,6 +109,33 @@ TEST_F(ParserTest, ParseBoard)
     EXPECT_EQ(pos.players[0], Green);
     EXPECT_EQ(pos.pieces[100], Pawn);
     EXPECT_EQ(pos.players[100], Yellow);
+}
+
+
+
+TEST_F(ParserTest, ParseDigit)
+{
+    EXPECT_TRUE(parse_digit('7', digit));
+    EXPECT_EQ(digit, 7);
+}
+
+TEST_F(ParserTest, ParseDigitError)
+{
+    EXPECT_FALSE(parse_digit('$', digit));
+}
+
+TEST_F(ParserTest, ParseInteger)
+{
+    EXPECT_TRUE(parse_integer("123", integer));
+    EXPECT_EQ(integer, 123);
+}
+
+TEST_F(ParserTest, ParseIntegerError)
+{
+    EXPECT_FALSE(parse_integer("", integer));
+    EXPECT_FALSE(parse_integer(" ", integer));
+    EXPECT_FALSE(parse_integer("@", integer));
+    EXPECT_FALSE(parse_integer("+7", integer));
 }
 
 /*
