@@ -1,10 +1,18 @@
 #include "definitions.h"
 
-Player operator++(Player player)
+bool valid_square(int row, int col)
 {
-    return static_cast<Player>((player + 1) % 4);
+    if (row < 0)  return false;
+    if (col < 0)  return false;
+    if (row > 13) return false;
+    if (col > 13) return false;
+    if (row < 3  && col < 3)  return false;
+    if (row < 3  && col > 10) return false;
+    if (row > 10 && col < 3)  return false;
+    if (row > 10 && col > 10) return false;
+    
+    return true;
 }
-
 /*
 
 namespace Definitions

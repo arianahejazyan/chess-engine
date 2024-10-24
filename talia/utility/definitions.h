@@ -5,26 +5,10 @@
 
 using namespace std;
 
-
-
-
-/*
-bool valid_square(int row, int col)
-{
-    if (row < 0)  return false;
-    if (col < 0)  return false;
-    if (row > 13) return false;
-    if (col > 13) return false;
-    if (row < 3  && col < 3)  return false;
-    if (row < 3  && col > 10) return false;
-    if (row > 10 && col < 3)  return false;
-    if (row > 10 && col > 10) return false;
-    
-    return true;
-}*/
-
 namespace definitions
 {
+
+bool valid_square(int row, int col);
 
 // number of rows and cols
 constexpr unsigned int dim = 14;
@@ -41,7 +25,7 @@ enum Piece {Brick=-1, Empty=0, King=1, Queen=2, Rook=3, Bishop=4, Knight=5, Pawn
 
 Player operator++(Player player);
 
-// used to convert 196 location to 160 squares
+// used to convert 196 locations to 160 squares
 int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,27,33};
 
 // used to extract rank and file of squares
