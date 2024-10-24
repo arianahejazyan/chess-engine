@@ -118,6 +118,8 @@ TEST_F(ParserTest, Substring)
     string str = "{'enPassant':('d3:d4','','','')}";
 
     EXPECT_EQ(substring(str, '(', ')'), "'d3:d4','','',''");
+
+    EXPECT_EQ(substring("'d3:d4'", '\'', '\''), "d3:d4");
 }
 
 TEST_F(ParserTest, ParseDigit)
@@ -164,7 +166,19 @@ TEST_F(ParserTest, ParseLocationError)
     EXPECT_FALSE(parse_location("B15", sq));
 }
 
+TEST_F(ParserTest, ParseEnpassant)
+{
+    EXPECT_TRUE(parse_enpassant("{'enPassant':('d3:d4','','','')}", pos));
+    EXPECT_EQ(pos.marked[Red], 16);
+    EXPECT_EQ(pos.target[Red], 27);
+}
 /*
+TEST_F(ParserTest, ParseEnpassantError)
+{
+
+}
+
+
 
 TEST_F(ParserTest, ParseTurn)
 {
