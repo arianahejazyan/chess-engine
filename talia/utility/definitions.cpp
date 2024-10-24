@@ -1,5 +1,14 @@
 #include "definitions.h"
 
+namespace definitions
+{
+
+// used to convert 196 locations to 160 squares
+constexpr int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,27,33};
+
+// used to extract rank and file of squares
+constexpr int stones[20] = {3,9,15,18,18,18,18,18,18,18,18,18,18,18,18,18,18,21,27,33};
+
 bool valid_square(int row, int col)
 {
     if (row < 0)  return false;
@@ -13,6 +22,16 @@ bool valid_square(int row, int col)
     
     return true;
 }
+
+Player& operator++(Player& player)
+{
+    player = static_cast<Player>((player + 1) % 5);
+
+    return player;
+}
+
+} // namespace
+
 /*
 
 namespace Definitions

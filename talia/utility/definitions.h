@@ -10,12 +10,19 @@ namespace definitions
 
 bool valid_square(int row, int col);
 
+
 // number of rows and cols
 constexpr unsigned int dim = 14;
 
 typedef unsigned int Square;
 
+constexpr Square offboard = 160;
+
 constexpr unsigned int board_size = 160;
+
+constexpr unsigned int player_size = 4;
+
+constexpr unsigned int side_size = 2;
 
 enum Player {Red=0, Blue=1, Yellow=2, Green=3, None=4};
 
@@ -23,13 +30,13 @@ enum Side {KingSide=0, QueenSide=1};
 
 enum Piece {Brick=-1, Empty=0, King=1, Queen=2, Rook=3, Bishop=4, Knight=5, Pawn=6};
 
-Player operator++(Player player);
+Player& operator++(Player& player);
 
 // used to convert 196 locations to 160 squares
-int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,27,33};
+extern const int bricks[14];
 
 // used to extract rank and file of squares
-int stones[20] = {3,9,15,18,18,18,18,18,18,18,18,18,18,18,18,18,18,21,27,33};
+extern const int stones[20];
 
 #define Spot(row, col) (row * dim + col - bricks[row])
 #define Rank(square) ((square + stones[square / 8]) / dim)
@@ -41,7 +48,11 @@ struct Position
     Piece pieces[board_size];
     Player players[board_size];
 
-    bool rights[4][2];
+    Square marked[player_size];
+    Square target[player_size];
+ 
+
+    bool rights[player_size][side_size];
 
     void place(Square sq, Piece piece, Player player)
     {
@@ -151,8 +162,7 @@ struct Position
     Piece* pieces;
     Player* players;  
     Square* royals;
-    Square* marked;
-    Square* target;
+
     bool* alive;
     unsigned short* safty;
     bool** rights;
