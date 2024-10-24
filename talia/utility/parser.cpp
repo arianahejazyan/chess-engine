@@ -5,7 +5,7 @@
 namespace parser
 {
     
-int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,24,27};
+//int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,24,27};
 //int stones[20] = {3,9,15, ..., 21,24,27};
 
 //#define Spot(row, col) (row * dim + col - bricks[row])
@@ -120,8 +120,8 @@ bool parse_board(const string& board, Position& pos)
 
 string substring(string str, char start, char end)
 {
-    size_t l = str.find('(');
-    size_t r = str.rfind(')');
+    size_t l = str.find(start);
+    size_t r = str.rfind(end);
 
     if (l != string::npos && r != string::npos)
     {
@@ -166,25 +166,25 @@ bool parse_integer(string str, int& integer)
     return true;
 }
 
-/*
-
-bool parse_location(string loc, Square sq)
+bool parse_location(string loc, Square& sq)
 {
+    int row, col;
+
     if (loc.size() < 2)
     {
         return false;
     }
 
-    int row, col;
+    char c = tolower(loc[0]);
 
-    if (loc[0] >= 'a' && loc[0] <= 'n')
+    if (c >= 'a' && c <= 'n')
     {
-        col = loc[0] -'a';
+        col = c - 'a';
     }
 
     else return false;
 
-    if (parse_integer(loc.substr(1), row) && row >= 1 && row <= 14)
+    if (parse_integer(loc.substr(1), row))
     {
         row--;
     }
@@ -193,7 +193,7 @@ bool parse_location(string loc, Square sq)
 
     if (valid_square(row, col))
     {
-        //sq = Spot(row, col);
+        sq = Spot(row, col);
     }
 
     else return false;
@@ -203,62 +203,38 @@ bool parse_location(string loc, Square sq)
 
 bool parse_enpassant(string enpassant, Position& pos)
 {
-    if (enpassant.empty()) return false;
+    vector<string> locations = split_string(substring(enpassant, '(', ')'), ',');
 
-    size_t lbrace = enpassant.find('(');
-    size_t rbrace = enpassant.rfind(')');
-
-    if (lbrace == string::npos || rbrace == string::npos) return false;
-
-    enpassant = enpassant.substr(lbrace + 1, rbrace - lbrace - 1);
-
-    /////////////////////////
-
-    // substring ( )
-
-    enpassant = substring(enpassant, '(', ')');
-
-    // split ','
-
-    vector<string> locations = split_string(enpassant, ',');
-
-    if (locations.size() < 4) return false;
-
-    // substring ' '
-
-    for (Player player = Red; Red <= Green; ++player)
+    if (locations.size() != 4)
     {
-        string squares = substring(locations[player], '\'', '\'');
+        return false;
+    } 
 
-        vector<string> parts = split_string(squares, ':');
+    for (Player p = Red; p <= Green; ++p)
+    //for (int p = 0; p <= 3; ++p)
+    {
+        vector<string> parts = split_string(substring(locations[p], '\'', '\''), ':');
 
-
-
-
-
-
-        if (!squares.empty())
+        if (parts.empty())
         {
-
+            pos.marked[p] = offboard;
+            pos.target[p] = offboard;    
         }
 
-        else
+        else if (parts.size() == 2)
         {
-            //string z = split_string(a, ':');
+            bool r1 = parse_location(parts[0], pos.marked[p]);
+            bool r2 = parse_location(parts[1], pos.target[p]);
 
-            //parse();
-            //parse();
+            if (!(r1 && r2)) return false;
         }
+
+        else return false;
     }
-
-    // if not empty split :
-
-    // parse square and update
-
 
     return true;
 }
-*/
+
 /*
 bool parse_fen(const string& fen, Position& pos)
 {
@@ -314,176 +290,5 @@ bool parse_right(const string& right, const Side& side, Position& pos)
     return true;
 }
 
-
-
-vector<string> expand(string rank)
-{
-    vector<string> result;
-
-
-    return result;
-}
-*/
-/*
-
-
-
-
-
-bool parse_board(const string& board, Position& pos)
-{
-    // split / then reverse
-
-    if (rows.size() != 14) return false;
-
-    unsigned int rank = 0;
-    for (string row: rows)
-    {
-        // split ,
-
-        unsigned int file = 0;
-        for (string col: cols)
-        {
-            // brick
-
-            // 
-
-            
-        }
-
-        if (file != 14) return false;
-    }
-
-    if (rank != 14) return false;
-
-    return true;
-}
-*/
-/*
-bool parse_board(const string& board, Position& pos)
-{
-    vector<string> parts = split(replace(board, '/'), ',');
-
-    unsigned int count = 0;
-    for (const string& str: board)
-    {
-        if (str.size() == 0) return false;
-
-        unsigned int empty;
-        if (string_to_integer(str, empty))
-        {
-            count += empty;
-        }
-
-        Piece piece;
-        Player player;
-
-        if (str.size() == 2 && char_to_piece(str[0], piece) && char_to_player(str[1], player))
-        {
-            count++;
-        }
-    }
-
-    return count == board_size;
-}
-
-bool parse_board3(const string& board, Position& pos)
-{
-    vector<string> squares = split(convert(board), ',');
-
-    if (squares.size() != board_size) return false;
-
-    for (int sq = 0; sq < board_size; ++sq)
-    {
-        pos.pieces[sq] = string_to_piece(squares[sq]);
-        pos.players[sq] = string_to_player(squares[sq]);
-    }
-
-    return true;
-}
-
-bool parse_board2(const string& board, Position& pos)
-{
-    vector<string> rows = split(board, '/');
-
-    std::reverse(rows.begin(), rows.end());
-
-    int rank = 0;
-    for (const string& line: rows)
-    {
-        vector<string> cols = split(line, ',');
-
-        int file = 0;
-        int bricks = 0;
-        for (const string& element: cols)
-        {
-            if (element.size() == 0) return false;
-
-            // check if square is a brick
-            if (std::tolower(element[0]) == 'x') 
-            {
-                file++;
-                bricks++;
-            }
-
-            // check if square is empty
-            else if (numerical(element))
-            {
-                file += (std::stoi(element) - 1);
-            }
-
-            // check if square is valid piece
-            Piece piece;
-            Player player;
-            if (conver(sq))
-            {
-
-            }
-
-
-
-            else if (element.size() == 2)
-            {
-                Square loc = static_cast<Square>(rank * 14 + file - bricks);
-
-                // extract player and update position
-                switch (lower(element[0]))
-                {
-                    case 'r': pos.players[loc] = Red;    break;
-                    case 'b': pos.players[loc] = Blue;   break;
-                    case 'y': pos.players[loc] = Yellow; break;
-                    case 'g': pos.players[loc] = Green;  break;
-                
-                    default: return false;
-                }
-
-                // extract piece and update position
-                switch (upper(element[1]))
-                {
-                    case 'P': pos.pieces[loc] = Pawn;   break;
-                    case 'N': pos.pieces[loc] = Knight; break;
-                    case 'B': pos.pieces[loc] = Bishop; break;
-                    case 'R': pos.pieces[loc] = Rook;   break;
-                    case 'Q': pos.pieces[loc] = Queen;  break;
-                    case 'K': pos.pieces[loc] = King;   break;
-
-                    default: return false;
-                }
-            }
-
-            else return false;
-
-            ++file;
-        }
-
-         if (file != 13) return false;
-
-         ++rank;
-    }
-
-    if (rank != 13) return false;
-
-    return true;
-}
 */
 }; // namespace

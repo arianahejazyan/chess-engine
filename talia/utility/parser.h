@@ -22,7 +22,9 @@ namespace parser
 
     bool parse_integer(string str, int& integer);
 
-    //bool parse_enpassant(const string& enpassant, Position& pos);
+    bool parse_location(string loc, Square& sq);
+
+    bool parse_enpassant(string enpassant, Position& pos);
 
     // bool parse_turn(const string& turn, Position& pos);
 
