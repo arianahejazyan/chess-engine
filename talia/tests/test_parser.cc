@@ -9,6 +9,8 @@ class ParserTest: public ::testing::Test
 
         Position pos;
 
+        Square sq;
+
         int integer;
         int digit;
 };
@@ -111,7 +113,12 @@ TEST_F(ParserTest, ParseBoard)
     EXPECT_EQ(pos.players[100], Yellow);
 }
 
+TEST_F(ParserTest, Substring)
+{
+    string str = "{'enPassant':('d3:d4','','','')}";
 
+    EXPECT_EQ(substring(str, '(', ')'), "'d3:d4','','',''");
+}
 
 TEST_F(ParserTest, ParseDigit)
 {
@@ -136,6 +143,25 @@ TEST_F(ParserTest, ParseIntegerError)
     EXPECT_FALSE(parse_integer(" ", integer));
     EXPECT_FALSE(parse_integer("@", integer));
     EXPECT_FALSE(parse_integer("+7", integer));
+}
+
+TEST_F(ParserTest, ParseLocation)
+{
+    EXPECT_TRUE(parse_location("d1", sq));
+    EXPECT_EQ(sq, 0);
+
+    EXPECT_TRUE(parse_location("k14", sq));
+    EXPECT_EQ(sq, 159);
+
+    EXPECT_TRUE(parse_location("g7", sq));
+    EXPECT_EQ(sq, 72);
+}
+
+TEST_F(ParserTest, ParseLocationError)
+{
+    EXPECT_FALSE(parse_location("a1", sq));
+    EXPECT_FALSE(parse_location("Q5", sq));
+    EXPECT_FALSE(parse_location("B15", sq));
 }
 
 /*
