@@ -4,6 +4,13 @@
 
 namespace parser
 {
+    
+int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,24,27};
+//int stones[20] = {3,9,15, ..., 21,24,27};
+
+//#define Spot(row, col) (row * dim + col - bricks[row])
+//#define Rank(square) ((square + bricks[square / 8]) / dim)
+//#define File(square) ((square + bricks[square / 8]) / dim)
 
 bool is_integer(const string& str)
 {
@@ -110,6 +117,148 @@ bool parse_board(const string& board, Position& pos)
     return count == board_size;
 }
 
+
+string substring(string str, char start, char end)
+{
+    size_t l = str.find('(');
+    size_t r = str.rfind(')');
+
+    if (l != string::npos && r != string::npos)
+    {
+        return str.substr(l + 1, r - l -1);
+    }
+
+    return "";
+}
+
+bool parse_digit(char ch, int& digit)
+{
+    if (ch >= '0' && ch <= '9')
+    {
+        digit = ch - '0';
+    }
+
+    else return false;
+
+    return true;
+}
+
+bool parse_integer(string str, int& integer)
+{
+    int digit;
+    integer = 0;
+    
+    if (str.empty())
+    {
+        return false;
+    }
+
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (parse_digit(str[i], digit))
+        {
+            integer = integer * 10 + digit;
+        }
+
+        else return false;
+    }
+
+    return true;
+}
+
+/*
+
+bool parse_location(string loc, Square sq)
+{
+    if (loc.size() < 2)
+    {
+        return false;
+    }
+
+    int row, col;
+
+    if (loc[0] >= 'a' && loc[0] <= 'n')
+    {
+        col = loc[0] -'a';
+    }
+
+    else return false;
+
+    if (parse_integer(loc.substr(1), row) && row >= 1 && row <= 14)
+    {
+        row--;
+    }
+
+    else return false;
+
+    if (valid_square(row, col))
+    {
+        //sq = Spot(row, col);
+    }
+
+    else return false;
+
+    return true;
+}
+
+bool parse_enpassant(string enpassant, Position& pos)
+{
+    if (enpassant.empty()) return false;
+
+    size_t lbrace = enpassant.find('(');
+    size_t rbrace = enpassant.rfind(')');
+
+    if (lbrace == string::npos || rbrace == string::npos) return false;
+
+    enpassant = enpassant.substr(lbrace + 1, rbrace - lbrace - 1);
+
+    /////////////////////////
+
+    // substring ( )
+
+    enpassant = substring(enpassant, '(', ')');
+
+    // split ','
+
+    vector<string> locations = split_string(enpassant, ',');
+
+    if (locations.size() < 4) return false;
+
+    // substring ' '
+
+    for (Player player = Red; Red <= Green; ++player)
+    {
+        string squares = substring(locations[player], '\'', '\'');
+
+        vector<string> parts = split_string(squares, ':');
+
+
+
+
+
+
+        if (!squares.empty())
+        {
+
+        }
+
+        else
+        {
+            //string z = split_string(a, ':');
+
+            //parse();
+            //parse();
+        }
+    }
+
+    // if not empty split :
+
+    // parse square and update
+
+
+    return true;
+}
+*/
 /*
 bool parse_fen(const string& fen, Position& pos)
 {
@@ -165,10 +314,7 @@ bool parse_right(const string& right, const Side& side, Position& pos)
     return true;
 }
 
-bool parse_enpassant(const string& enpassant, Position& pos)
-{
-    
-}
+
 
 vector<string> expand(string rank)
 {

@@ -16,11 +16,17 @@ namespace parser
 
     bool parse_board(const string& board, Position& pos);
 
+    string substring(string str, char start, char end);
+
+    bool parse_digit(char ch, int& digit);
+
+    bool parse_integer(string str, int& integer);
+
+    //bool parse_enpassant(const string& enpassant, Position& pos);
+
     // bool parse_turn(const string& turn, Position& pos);
 
     //bool parse_right(const string& right, const Side& side, Position& pos);
-
-    //bool parse_enpassant(const string& enpassant, Position& pos);
 
     // bool parse_fen(const string& fen, Position& pos);
 };
