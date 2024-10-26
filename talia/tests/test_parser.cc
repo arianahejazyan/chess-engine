@@ -184,13 +184,6 @@ TEST_F(ParserTest, ParseTurn)
     EXPECT_EQ(pos.turn, Blue);
 }
 
-/*
-
-
-
-
-
-
 TEST_F(ParserTest, ParseRight)
 {
     EXPECT_TRUE(parse_right("1-1-0-0", QueenSide, pos));
@@ -199,6 +192,15 @@ TEST_F(ParserTest, ParseRight)
     EXPECT_EQ(pos.rights[Yellow][QueenSide], false);
     EXPECT_EQ(pos.rights[Green][QueenSide], false);
 }
+
+
+/*
+
+
+
+
+
+
 
 TEST_F(ParserTest, ValidBoard)
 {
