@@ -235,6 +235,23 @@ bool parse_enpassant(string enpassant, Position& pos)
     return true;
 }
 
+bool parse_turn(string turn, Position& pos)
+{
+    if (turn.length() != 1) return false;
+    
+    switch (turn[0])
+    {
+        case 'R': pos.turn = Red;    break;
+        case 'B': pos.turn = Blue;   break;
+        case 'Y': pos.turn = Yellow; break;
+        case 'G': pos.turn = Green;  break;
+        
+        default: return false;
+    }
+
+    return true;
+}
+
 /*
 bool parse_fen(const string& fen, Position& pos)
 {
@@ -253,22 +270,7 @@ bool parse_fen(const string& fen, Position& pos)
     return true;
 }
 
-bool parse_turn(const string& turn, Position& pos)
-{
-    if (turn.length() != 1) return false;
-    
-    switch (turn[0])
-    {
-        case 'R': pos.turn = Red;    break;
-        case 'B': pos.turn = Blue;   break;
-        case 'Y': pos.turn = Yellow; break;
-        case 'G': pos.turn = Green;  break;
-        
-        default: return false;
-    }
 
-    return true;
-}
 
 bool parse_right(const string& right, const Side& side, Position& pos)
 {
