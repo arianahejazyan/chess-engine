@@ -252,6 +252,26 @@ bool parse_turn(string turn, Position& pos)
     return true;
 }
 
+bool parse_right(string right, Side side, Position& pos)
+{
+    vector<string> parts = split_string(right, '-');
+
+    if (parts.size() != 4) return false;
+
+    for (Player player = Red; player <= Green; ++player)
+    {
+        switch (parts[player][0])
+        {
+            case '1': pos.rights[player][side] = true; break;
+            case '0': pos.rights[player][side] = false; break;
+
+            default: return false;
+        }
+    }
+
+    return true;
+}
+
 /*
 bool parse_fen(const string& fen, Position& pos)
 {
@@ -272,25 +292,6 @@ bool parse_fen(const string& fen, Position& pos)
 
 
 
-bool parse_right(const string& right, const Side& side, Position& pos)
-{
-    vector<string> parts = split(right, ',');
-
-    if (parts.size() != 4) return false;
-
-    for (Player player = Red; player <= Green; ++player)
-    {
-        switch (parts[player][0])
-        {
-            case '1': pos.rights[player][side] = true; break;
-            case '0': pos.rights[player][side] = false; break;
-
-            default: return false;
-        }
-    }
-
-    return true;
-}
 
 */
 }; // namespace

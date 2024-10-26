@@ -28,7 +28,7 @@ namespace parser
 
     bool parse_turn(string turn, Position& pos);
 
-    //bool parse_right(const string& right, const Side& side, Position& pos);
+    bool parse_right(string right, Side side, Position& pos);
 
     // bool parse_fen(const string& fen, Position& pos);
 };
