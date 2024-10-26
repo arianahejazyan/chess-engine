@@ -172,19 +172,24 @@ TEST_F(ParserTest, ParseEnpassant)
     EXPECT_EQ(pos.marked[Red], 16);
     EXPECT_EQ(pos.target[Red], 27);
 }
-/*
+
 TEST_F(ParserTest, ParseEnpassantError)
 {
 
 }
-
-
 
 TEST_F(ParserTest, ParseTurn)
 {
     EXPECT_TRUE(parse_turn("B", pos));
     EXPECT_EQ(pos.turn, Blue);
 }
+
+/*
+
+
+
+
+
 
 TEST_F(ParserTest, ParseRight)
 {
