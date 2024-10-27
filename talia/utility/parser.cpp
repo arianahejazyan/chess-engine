@@ -254,7 +254,7 @@ bool parse_turn(string turn, Position& pos)
 
 bool parse_right(string right, Side side, Position& pos)
 {
-    vector<string> parts = split_string(right, '-');
+    vector<string> parts = split_string(right, ',');
 
     if (parts.size() != 4) return false;
 
@@ -272,26 +272,44 @@ bool parse_right(string right, Side side, Position& pos)
     return true;
 }
 
-/*
-bool parse_fen(const string& fen, Position& pos)
+bool parse_fen(string fen, Position& pos)
 {
-    vector<string> parts = split(fen, '-');
+    vector<string> parts = split_string(fen, '-');
 
-    if (parts.size() < 6 || parts.size() > 9) return false;
+    if (parts.size() < 7)
+    {
+        return false;
+    } 
 
-    string turn = parts[0];
+    if (!parse_turn(parts[0], pos))
+    {
+        return false;
+    }
 
-    parse_
+    if (!parse_right(parts[2], KingSide, pos))
+    {
+        return false;
+    }
 
-    if (parse_turn(parts[0], pos) == false) return false;
-    if (parse_rights(parts[0], KingSide, pos) == false) return false;
-    if (parse_rights(parts[0], QueenSide, pos) == false) return false;
+    if (!parse_right(parts[3], QueenSide, pos))
+    {
+        return false;
+    }
+
+    if (parts.size() == 8)
+    {
+        if (!parse_enpassant(parts[6], pos))
+        {
+            return false;
+        }
+    }
+
+    if (!parse_board(parts.back(), pos))
+    {
+        return false;
+    }
 
     return true;
 }
 
-
-
-
-*/
 }; // namespace

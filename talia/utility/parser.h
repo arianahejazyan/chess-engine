@@ -30,5 +30,5 @@ namespace parser
 
     bool parse_right(string right, Side side, Position& pos);
 
-    // bool parse_fen(const string& fen, Position& pos);
+    bool parse_fen(string fen, Position& pos);
 };
