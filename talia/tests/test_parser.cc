@@ -13,6 +13,9 @@ class ParserTest: public ::testing::Test
 
         int integer;
         int digit;
+
+        string fen1 = "R-0,0,0,0-1,1,1,1-1,1,1,1-0,0,0,0-0-x,x,x,yR,yN,yB,yK,yQ,yB,yN,yR,x,x,x/x,x,x,yP,yP,yP,yP,yP,1,yP,yP,x,x,x/x,x,x,8,x,x,x/bR,bP,10,gP,gR/bN,bP,6,yP,3,gP,gN/bB,bP,10,gP,gB/bK,bP,10,gP,gQ/bQ,bP,10,gP,gK/bB,bP,10,gP,gB/bN,bP,10,gP,gN/bR,bP,10,gP,gR/x,x,x,8,x,x,x/x,x,x,rP,rP,rP,rP,rP,rP,rP,rP,x,x,x/x,x,x,rR,rN,rB,rQ,rK,rB,rN,rR,x,x,x";
+        string fen2 = "B-0,0,0,0-1,1,1,1-1,1,1,1-0,0,0,0-0-{'enPassant':('d3:d4','','','')}-x,x,x,yR,yN,yB,yK,yQ,yB,yN,yR,x,x,x/x,x,x,yP,yP,yP,yP,yP,yP,yP,yP,x,x,x/x,x,x,8,x,x,x/bR,bP,10,gP,gR/bN,bP,10,gP,gN/bB,bP,10,gP,gB/bQ,bP,10,gP,gK/bK,bP,10,gP,gQ/bB,bP,10,gP,gB/bN,bP,10,gP,gN/bR,bP,1,rP,8,gP,gR/x,x,x,8,x,x,x/x,x,x,1,rP,rP,rP,rP,rP,rP,rP,x,x,x/x,x,x,rR,rN,rB,rQ,rK,rB,rN,rR,x,x,x";
 };
 
 TEST_F(ParserTest, IsInteger)
@@ -172,13 +175,11 @@ TEST_F(ParserTest, ParseEnpassant)
     EXPECT_EQ(pos.marked[Red], 16);
     EXPECT_EQ(pos.target[Red], 27);
 }
-/*
+
 TEST_F(ParserTest, ParseEnpassantError)
 {
 
 }
-
-
 
 TEST_F(ParserTest, ParseTurn)
 {
@@ -188,12 +189,26 @@ TEST_F(ParserTest, ParseTurn)
 
 TEST_F(ParserTest, ParseRight)
 {
-    EXPECT_TRUE(parse_right("1-1-0-0", QueenSide, pos));
+    EXPECT_TRUE(parse_right("1,1,0,0", QueenSide, pos));
     EXPECT_EQ(pos.rights[Red][QueenSide], true);
     EXPECT_EQ(pos.rights[Blue][QueenSide], true);
     EXPECT_EQ(pos.rights[Yellow][QueenSide], false);
     EXPECT_EQ(pos.rights[Green][QueenSide], false);
 }
+
+TEST_F(ParserTest, ParseFen)
+{
+    EXPECT_TRUE(parse_fen(fen1, pos));
+    EXPECT_TRUE(parse_fen(fen2, pos));
+}
+
+/*
+
+
+
+
+
+
 
 TEST_F(ParserTest, ValidBoard)
 {

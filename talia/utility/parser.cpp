@@ -235,25 +235,7 @@ bool parse_enpassant(string enpassant, Position& pos)
     return true;
 }
 
-/*
-bool parse_fen(const string& fen, Position& pos)
-{
-    vector<string> parts = split(fen, '-');
-
-    if (parts.size() < 6 || parts.size() > 9) return false;
-
-    string turn = parts[0];
-
-    parse_
-
-    if (parse_turn(parts[0], pos) == false) return false;
-    if (parse_rights(parts[0], KingSide, pos) == false) return false;
-    if (parse_rights(parts[0], QueenSide, pos) == false) return false;
-
-    return true;
-}
-
-bool parse_turn(const string& turn, Position& pos)
+bool parse_turn(string turn, Position& pos)
 {
     if (turn.length() != 1) return false;
     
@@ -270,9 +252,9 @@ bool parse_turn(const string& turn, Position& pos)
     return true;
 }
 
-bool parse_right(const string& right, const Side& side, Position& pos)
+bool parse_right(string right, Side side, Position& pos)
 {
-    vector<string> parts = split(right, ',');
+    vector<string> parts = split_string(right, ',');
 
     if (parts.size() != 4) return false;
 
@@ -290,5 +272,44 @@ bool parse_right(const string& right, const Side& side, Position& pos)
     return true;
 }
 
-*/
+bool parse_fen(string fen, Position& pos)
+{
+    vector<string> parts = split_string(fen, '-');
+
+    if (parts.size() < 7)
+    {
+        return false;
+    } 
+
+    if (!parse_turn(parts[0], pos))
+    {
+        return false;
+    }
+
+    if (!parse_right(parts[2], KingSide, pos))
+    {
+        return false;
+    }
+
+    if (!parse_right(parts[3], QueenSide, pos))
+    {
+        return false;
+    }
+
+    if (parts.size() == 8)
+    {
+        if (!parse_enpassant(parts[6], pos))
+        {
+            return false;
+        }
+    }
+
+    if (!parse_board(parts.back(), pos))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 }; // namespace
