@@ -4,19 +4,42 @@
 
 #define update(rank, file, offset) rank +=  offset.vertical; file += offset.horizontal;
 
+#define target2 int r = Rank(sq) + offset.vertical; int f = File(sq) + offset.horizontal;
 
+#define increase r += offset.vertical; f += offset.horizontal;
 
+#define insert vec.push_back(Spot(r, f));
 
+#define iterate_slide  for (Square sq = 0; sq < board_size; ++sq) for (Offset offset: patterns[Queen])
 
+#define boom(v, h) (v * dim + h)
+
+/*
+inline static void calculate_march_squares(Square sq, Player player, vector<Square>& vec)
+{
+
+}
+*/
+inline static void calculate_slide_squares(Square sq, Offset offset, vector<Square>& vec)
+{
+    target(sq, offset)
+
+    while (valid_square(r, f))
+    {
+        insert
+
+        increase
+    }
+}
 
 inline static void calculate_crawl_squares(Square sq, Piece piece, vector<Square>& vec)
 {
-    for (Offset offset: patterns[piece])
+    for (Offset offset: patterns[piece - 1])
     {
         target(sq, offset)
 
         if (valid_square(r, f))
-        {
+        {   
             vec.push_back(Spot(r, f));
         }
     }
@@ -26,83 +49,35 @@ void Pseudo::init(Config config)
 {
     for (Square sq = 0; sq < board_size; ++sq)
     {
+        // crawl
         for (Piece piece: {King, Knight})
         {
-            calculate_crawl_squares(sq, piece, crawl[sq][piece % 3]);
+            calculate_crawl_squares(sq, piece, crawl[sq][piece / 5]); 
         }
-
-        /*
-        for (Offset offset: patterns[King])
-        {
-            target(sq, offset)
-
-            if (valid_square(r, f)) crawl[sq][King % 4].push_back(Spot(r, f));
-        }*/
-
-
-        /*
-        if (valid_square(1, 3))
-        {
-            crawl[sq][King % 4].push_back(Spot(1,3));
-        }
-        */
         
-
-
-
-        /*
-        for (Offset offset: {Offset(S, S, Crawl)}) //patterns[King]
+        // slide
+        for (Offset offset: patterns[Queen - 1])
         {
-            target(sq, offset)
-
-            if (valid_square(r, f))
-            {
-                crawl[sq][King % 4].push_back(Spot(r, f));
-            }
+            calculate_slide_squares(sq, offset, slide[sq][meow[boom(offset.vertical, offset.horizontal)]]);
         }
 
-        */
+        // march
+        for (Player player: {Red, Blue, Yellow, Green})
+        {
 
+        }
 
-        /*
-*/
+        // castle
+        for (Side side: {KingSide, QueenSide})
+        {
+
+        }
     }
 }
+
 /*
 namespace pseudo
 {
-
-
-void calculate_crawl_squares()
-{
-    iterate_crawl
-    {
-        for (Offset offset: patterns[piece])
-        {
-            target(sq, offset)
-
-            if (valid_square(r, f))
-            {
-                crawl_squares[sq][piece % 5].push_back(Spot(r, f));
-            }
-        }
-    }
-}
-
-void calculate_slide_squares(Piece piece)
-{
-    iterate_slide
-    {
-        target(sq, offset)
-
-        while (valid_square(r, f))
-        {
-            slide_squares[sq][offset].push_back(sq, Spot(r, f));
-
-            update(r, f, offset)
-        }
-    }
-}
 
 void calculate_push_squares()
 {

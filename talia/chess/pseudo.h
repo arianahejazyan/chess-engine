@@ -4,7 +4,7 @@
 using namespace definitions;
 
 #define iterate_crawl  for (Square sq = 0; sq < board_size; ++sq) for (Piece piece: {King, Knight})
-#define iterate_slide  for (Square sq = 0; sq < board_size; ++sq) for (Offset offset: patterns[Queen])
+#define iterate_slide2  for (Square sq = 0; sq < board_size; ++sq) for (Offset offset: patterns[Queen])
 #define iterate_march  for (Square sq = 0; sq < board_size; ++sq) for (Player player: {Red, Blue, Yellow, Green})
 #define iterate_castle for (Square sq = 0; sq < board_size; ++sq) for (Side side: {KingSide, QueenSide})
 
