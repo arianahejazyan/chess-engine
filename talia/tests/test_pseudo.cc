@@ -52,9 +52,9 @@ TEST_F(PseudoTest, Crawl)
 {
     pseudo.init(config);
 
-    EXPECT_EQ(pseudo.crawl[0][King % 3], vector<Square>({9, 8, 1}));
-    //EXPECT_EQ(pseudo.crawl[0][King % 3], vector<Square>({34, 65, 6}));
+    EXPECT_EQ(pseudo.crawl[0][0], vector<Square>({9, 8, 1}));
+    EXPECT_EQ(pseudo.crawl[72][0], vector<Square>({87, 86, 85, 73, 71, 59, 58, 57}));
 
-    EXPECT_EQ(pseudo.crawl[0][Knight % 3], vector<Square>({17, 10}));
-    //EXPECT_EQ(pseudo.crawl[0][Knight], vector<Square>({34, 65, 6}));
+    EXPECT_EQ(pseudo.crawl[0][1], vector<Square>({17, 10}));
+    EXPECT_EQ(pseudo.crawl[72][1], vector<Square>({101, 99, 88, 84, 60, 56, 45, 43}));
 }
