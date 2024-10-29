@@ -35,3 +35,14 @@ TEST_F(DefinitionsTest, SpotMacro)
     EXPECT_EQ(Spot(11, 7), 140);
     EXPECT_EQ(Spot(13, 10), 159);
 }
+
+TEST_F(DefinitionsTest, ValidSquare)
+{
+    EXPECT_TRUE(valid_square(3,0));
+    EXPECT_TRUE(valid_square(6,10));
+    EXPECT_TRUE(valid_square(13,10));
+
+    EXPECT_FALSE(valid_square(0,0));
+    EXPECT_FALSE(valid_square(-1,5));
+    EXPECT_FALSE(valid_square(15,8));
+}
