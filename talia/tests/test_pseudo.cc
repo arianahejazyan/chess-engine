@@ -58,3 +58,17 @@ TEST_F(PseudoTest, Crawl)
     EXPECT_EQ(pseudo.crawl[0][1], vector<Square>({17, 10}));
     EXPECT_EQ(pseudo.crawl[72][1], vector<Square>({101, 99, 88, 84, 60, 56, 45, 43}));
 }
+
+TEST_F(PseudoTest, Slide)
+{
+    pseudo.init(config);
+
+    EXPECT_EQ(pseudo.slide[28][0], vector<Square>({43, 58, 73, 88, 103, 118, 133}));
+    EXPECT_EQ(pseudo.slide[28][1], vector<Square>({42, 56, 70, 84, 98, 112, 126, 137, 145, 153}));
+    EXPECT_EQ(pseudo.slide[28][2], vector<Square>({41, 54, 67, 80}));
+    EXPECT_EQ(pseudo.slide[28][3], vector<Square>({29, 30, 31, 32, 33, 34, 35, 36, 37}));
+    EXPECT_EQ(pseudo.slide[28][4], vector<Square>({27, 26, 25, 24}));
+    EXPECT_EQ(pseudo.slide[28][5], vector<Square>({18, 11, 4}));
+    EXPECT_EQ(pseudo.slide[28][6], vector<Square>({17, 9, 1}));
+    EXPECT_EQ(pseudo.slide[28][7], vector<Square>({16}));
+}
