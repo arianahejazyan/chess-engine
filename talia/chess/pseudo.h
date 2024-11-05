@@ -23,6 +23,42 @@ struct Pseudo
 
     void init(Config config);
 };
+
+namespace pseudo
+{
+
+/*
+constexpr array<Square, 5> passing_squares[4][2] = 
+{
+    {
+    {5, 6, 1, 2, 3},
+    {94, 108, 38, 52, 66},
+    {153, 154, 156, 157, 158},
+    {51, 65, 93, 107, 121},
+    },
+
+    {
+    {5, 6, 1, 2, 3},
+    {38, 52, 80, 94, 108},
+    {153, 154, 156, 157, 158},
+    {107, 121, 51, 65, 79},
+    },
+};
+*/
+
+extern const array<Square, 7> castling_squares[4][2];
+extern const array<Square, 5> passing_squares[4][2];
+extern const array<Square, 5> secure_squares[4][2];
+
+//extern const array<Square, 5> passing_squares[4][2];
+/*
+vector<Square> castle_squares[player_size][side_size]; 
+vector<Square> passing_squares[player_size][side_size]; 
+vector<Square> secure_squares[player_size][side_size];
+*/
+};
+
+
 /*
 namespace pseudo
 {

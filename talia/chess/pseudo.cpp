@@ -20,6 +20,88 @@ inline static void calculate_march_squares(Square sq, Player player, vector<Squa
 
 }
 */
+
+namespace pseudo
+{
+
+// [0]: RoyalFrom, [1]: RoyalKingSide, [2]: RoyalQueenSide, [3]: RookFromKingSide, [4]: RookToKingSide, [5]: RookFromQueenSide, [6]: RookToQueenSide, 
+constexpr array<Square, 7> castling_squares[4][2] =
+{
+    // Red
+    {
+        {4, 6, 2, 7, 5, 0, 3}, // Modern
+        {4, 6, 2, 7, 5, 0, 3}, // Classic
+    },
+    // Blue
+    {
+        {66, 38, 94, 24, 52, 122, 80},  // Modern        
+        {80, 108, 52, 122, 94, 24, 66}, // Classic
+    },
+    // Yellow
+    {
+        {155, 153, 157, 152, 154, 159, 156}, // Modern
+        {155, 153, 157, 152, 154, 159, 156}, // Classic
+    },
+    // Green
+    {
+        {93, 121, 65, 135, 107, 37, 79}, // Modern
+        {79, 51, 107, 37, 65, 135, 93},  // Classic
+    }
+};
+
+// [0,1]: KingSide, [2,3,4]: QueenSide
+constexpr array<Square, 5> passing_squares[4][2] =
+{
+    // Red
+    {
+        {5, 6, 1, 2, 3}, // Modern
+        {5, 6, 1, 2, 3}, // Classic
+    },
+    // Blue
+    {
+        {38, 52, 80, 94, 108}, // Modern        
+        {94, 108, 38, 52, 66}, // Classic
+    },
+    // Yellow
+    {
+        {153, 154, 156, 157, 158}, // Modern
+        {153, 154, 156, 157, 158}, // Classic
+    },
+    // Green
+    {
+        {107, 121, 51, 65, 79}, // Modern        
+        {51, 65, 93, 107, 121}, // Classic
+    }
+};
+
+// [0,1,2]: KingSide, [2,3,4]: QueenSide 
+constexpr array<Square, 5> secure_squares[4][2] =
+{
+    // Red
+    {
+        {5, 6, 4, 3, 2}, // Modern
+        {5, 6, 4, 3, 2}, // Classic
+    },
+    // Blue
+    {
+        {38, 52, 66, 80, 94},  // Modern        
+        {108, 94, 80, 66, 52}, // Classic
+    },
+    // Yellow
+    {
+        {153, 154, 155, 156, 157}, // Modern
+        {153, 154, 155, 156, 157}, // Classic
+    },
+    // Green
+    {
+        {121, 107, 93, 79, 65}, // Modern        
+        {51, 65, 79, 93, 107},  // Classic
+    }
+};
+
+}; // namespace
+
+
 inline static void calculate_slide_squares(Square sq, Offset offset, vector<Square>& vec)
 {
     target(sq, offset)
@@ -63,12 +145,6 @@ void Pseudo::init(Config config)
 
         // march
         for (Player player: {Red, Blue, Yellow, Green})
-        {
-
-        }
-
-        // castle
-        for (Side side: {KingSide, QueenSide})
         {
 
         }
