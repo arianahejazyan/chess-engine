@@ -1,25 +1,6 @@
 #include "pseudo.h"
 
-#define target(sq, offset) int r = Rank(sq) + offset.vertical; int f = File(sq) + offset.horizontal;
-
-#define update(rank, file, offset) rank +=  offset.vertical; file += offset.horizontal;
-
-#define target2 int r = Rank(sq) + offset.vertical; int f = File(sq) + offset.horizontal;
-
-#define increase r += offset.vertical; f += offset.horizontal;
-
-#define insert vec.push_back(Spot(r, f));
-
-#define iterate_slide  for (Square sq = 0; sq < board_size; ++sq) for (Offset offset: patterns[Queen])
-
-#define boom(v, h) (v * dim + h)
-
 /*
-inline static void calculate_march_squares(Square sq, Player player, vector<Square>& vec)
-{
-
-}
-
 
 namespace pseudo
 {
@@ -102,69 +83,30 @@ constexpr array<Square, 5> secure_squares[4][2] =
 }; // namespace
 
 
-inline static void calculate_slide_squares(Square sq, Offset offset, vector<Square>& vec)
-{
-    target(sq, offset)
-
-    while (valid_square(r, f))
-    {
-        insert
-
-        increase
-    }
-}
-
-void Pseudo::init(Config config)
-{
-    for (Square sq = 0; sq < board_size; ++sq)
-    {
-        // crawl
-        for (Piece piece: {King, Knight})
-        {
-            calculate_crawl_squares(sq, piece, crawl[sq][piece / 5]); 
-        }
-        
-        // slide
-        for (Offset offset: patterns[Queen - 1])
-        {
-            calculate_slide_squares(sq, offset, slide[sq][meow[boom(offset.vertical, offset.horizontal)]]);
-        }
-
-        // march
-        for (Player player: {Red, Blue, Yellow, Green})
-        {
-
-        }
-    }
-}
 
 */
 
 namespace pseudo
 {
 
-unsigned int KING_MOVEMENT   = 0;
-unsigned int KNIGHT_MOVEMENT = 1;
+unsigned int king_movement   = 0;
+unsigned int knight_movement = 1;
 
-unsigned int QUEEN_MOVEMENT[8]  = {2, 3, 4, 5, 6, 7, 8, 9};
-unsigned int ROOK_MOVEMENT[4]   = {3, 5, 6, 8};
-unsigned int BISHOP_MOVEMENT[4] = {2, 4, 7, 9};
+unsigned int queen_movement[8]  = {2, 3, 4, 5, 6, 7, 8, 9};
+unsigned int rook_movement[4]   = {3, 5, 6, 8};
+unsigned int bishop_movement[4] = {2, 4, 7, 9};
+
+unsigned int push_movement[4]    = {10, 11, 12, 13};
+unsigned int advance_movement[4] = {14, 15, 16, 17};
+
+unsigned int attack_movement[4] = {18, 19, 20, 21};
+
+bool IsHomerankSquare[board_size][player_size];
+bool IsPromotionSquare[board_size][player_size]; 
 
 unsigned int start[board_size][26], range[board_size][26];
 
 array<Square, 100000> squares;
-
-/*
-void generate(array<Square, 1000> arr)
-{
-    unsigned int idx = 0;
-    
-    for (Piece piece: {King, Knight})
-    {
-        crawl(piece, idx, arr);
-    }
-}
-*/
 
 void initialize()
 {
@@ -179,6 +121,24 @@ void initialize()
     {
         slide(offset, idx, movement++);
     }
+
+    for (Flag flag: {Push, Advance})
+    {
+        for (Player player: {Red, Blue, Yellow, Green})
+        {
+            march(player, idx, movement++, flag); 
+        }        
+    }
+
+    for (Alliance alliance: {RY, BG})
+    {
+        for (Player opponent: enemy[alliance])
+        {
+            attack(alliance, opponent, idx, movement++);
+        }
+    }
+
+    generate_masks();
 }
 
 void crawl(Piece piece, unsigned int& idx, unsigned int movement)
@@ -189,12 +149,12 @@ void crawl(Piece piece, unsigned int& idx, unsigned int movement)
 
         for (Offset offset: patterns[piece - 1])
         {
-            int r = Rank(sq) + offset.vertical;
-            int f = File(sq) + offset.horizontal;
+            int r = rank(sq) + offset.vertical;
+            int f = file(sq) + offset.horizontal;
 
             if (valid_square(r, f))
             {
-                squares[idx + count++] = Spot(r, f);
+                squares[idx + count++] = spot(r, f);
             }
         }
 
@@ -211,12 +171,12 @@ void slide(Offset offset, unsigned int& idx, unsigned int movement)
     {
         unsigned int count = 0;
 
-        int r = Rank(sq) + offset.vertical;
-        int f = File(sq) + offset.horizontal;
+        int r = rank(sq) + offset.vertical;
+        int f = file(sq) + offset.horizontal;
 
         while (valid_square(r, f))
         {
-            squares[idx + count++] = Spot(r, f);
+            squares[idx + count++] = spot(r, f);
             
             r += offset.vertical;
             f += offset.horizontal;
@@ -229,10 +189,135 @@ void slide(Offset offset, unsigned int& idx, unsigned int movement)
     }
 }
 
+void march(Player player, unsigned int& idx, unsigned int movement, Flag flag)
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        unsigned int count = 0;
+
+        for (Offset offset: patterns[Pawn - 1])
+        {
+            if (offset.player == player && offset.flag == flag)
+            {
+                int r = rank(sq) + offset.vertical;
+                int f = file(sq) + offset.horizontal;        
+
+                if (valid_square(r, f))
+                {
+                    squares[idx + count++] = spot(r, f);
+                } 
+            }
+        }
+        
+        start[sq][movement] = idx;
+        range[sq][movement] = count;
+
+        idx += count;
+    }
+}
+
+void attack(Alliance alliance, Player opponent, unsigned int& idx, unsigned int movement)
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        unsigned int count = 0;
+
+        for (Offset offset: patterns[Pawn - 1])
+        {
+            if (offset.player == teammate(opponent) && offset.flag == Advance)
+            {
+                int r = rank(sq) + offset.vertical;
+                int f = file(sq) + offset.horizontal;        
+
+                if (valid_square(r, f))
+                {
+                    squares[idx + count++] = spot(r, f);
+                } 
+            }
+        }
+
+        start[sq][movement] = idx;
+        range[sq][movement] = count;
+
+        idx += count;
+    }
+}
+
+void generate_masks()
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        for (Player player: {Red, Blue, Yellow, Green})
+        {
+            IsPromotionSquare[sq][player] = promotion_square(sq, player);
+            IsHomerankSquare[sq][player] = homerank_square(sq, player);
+        }
+    }
+}
+
+/*
+void push(Player player, unsigned int& idx, unsigned int movement, Offset offset)
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        unsigned int count = 0;
+
+        int r1 = Rank(sq) + offset.vertical;
+        int f1 = File(sq) + offset.horizontal;
+
+        if (valid_square(r1, f1))
+        {
+            squares[idx + count++] = Spot(r, f);
+        }
+        
+        start[sq][movement] = idx;
+        range[sq][movement] = count;
+
+        idx += count;
+    }
+}
+
+void advance(Player player, unsigned int& idx, unsigned int movement, Offset offset)
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        unsigned int count = 0;
+
+        int r1 = Rank(sq) + offset.vertical;
+        int f1 = File(sq) + offset.horizontal;
+
+        if (valid_square(r1, f1))
+        {
+            squares[idx + count++] = Spot(r, f);
+        }
+                
+        start[sq][movement] = idx;
+        range[sq][movement] = count;
+
+        idx += count;
+    }
+}
+*/
 }; // namespace
 
 
 /*
+
+void promote()
+{
+    if (promotion_square(r, f))
+    {
+        for (Piece piece: promotion_list)
+        {
+
+        }
+    }
+
+    else squares[idx + count++] = Spot(r, f);
+}
+
+
+
 namespace pseudo
 {
 
@@ -301,176 +386,12 @@ void calculate_promotion_squares()
 
 }
 
-void calculate_passing_squares()
-{
-    iterate_castle
-    {
-
-    }
-}
-
-void calculate_secure_squares()
-{
-    iterate_castle
-    {
-
-    }
-}
-
-void calculate_castle_squares()
-{
-    iterate_castle
-    {
-
-    }
-}
-
-void init()
-{
-
-}
-
-void reset()
-{
-    iterate()
-    {
-
-    }
-}
 
 }; // namespace
 */
 
 /*
 
-
-void calculate_slide_moves(const Square origin, const Piece piece, Offset offset)
-{
-    Spot destination(origin);
-
-    destination += offset;
-
-    while (destination.valid())
-    {
-        slide_moves[origin][offset.direction()].emplace(origin, destination.square());
-
-        destination += offset;
-    }
-}
-
-
-
-void pseudo::calculate_crawl_moves(const Square origin, const Piece piece, const Offset offset)
-{
-    Spot destination(origin);
-
-    destination += offset;
-
-    if (destination.valid())
-    {
-        crawl_moves[origin][piece].emplace(origin, destination.square());
-    }
-}
-
-
-
-void pseudo::calculate_all_moves()
-{
-    for (const Piece piece: {King, Queen, Rook, Bishop, Knight, Pawn})
-    {
-        calculate_moves(piece);
-    }
-
-
-
-    for (const Square sq: board::valid_squares)
-    {
-        for (const Piece piece: {King, Queen, Rook, Bishop, Knight, Pawn})
-        {
-            for (const Offest offset: offsets[piece])
-            {
-                switch (offset.flag)
-                {
-                    case Crawl: 
-                    case Slide:
-                    case Push:
-                    case Advance:
-
-                    break;
-                
-                default:
-                    break;
-                }
-            }
-
-
-
-
-
-            for (const Direction& dir: directions[piece])
-            {
-                switch (piece)
-                {
-                    case Pawn:   calculate_march_moves(sq, piece, dir); break;
-                    case Knight: calculate_crawl_moves(sq, piece, dir); break;
-                    case Bishop: calculate_slide_moves(sq, piece, dir); break;
-                    case Rook:   calculate_slide_moves(sq, piece, dir); break;
-                    case Queen:  calculate_slide_moves(sq, piece, dir); break;
-                    case King:   calculate_crawl_moves(sq, piece, dir); break;
-                
-                    default: break;
-                }
-            }
-        }
-    }
-
-    calculate_enpassant_moves();
-
-    calculate_castle_moves();
-}
-
-inline void pseudo::calculate_moves(Piece piece)
-{
-    for (const Square sq: board::valid_squares)
-    {
-        for (const Offset offset: offsets[piece])
-        {
-            switch (offset.flag)
-            {
-                case Crawl: calculate_crawl_moves(); break;
-                case Slide: calculate_slide_moves(); break;
-                case Push:  calculate_push_moves();  break;
-                case March: calculate_march_moves(); break;
-            
-                default: break;
-            }
-        }
-    }
-}
-
-void pseudo::calculate_push_moves(const Square origin)
-{
-    Spot destination(origin);
-
-    destination += offset;
-
-    if (destination.valid())
-    {
-
-    }
-}
-
-void pseudo::calculate_march_moves(const Square origin)
-{
-    Spot destination(origin);
-
-    destination += offset;
-
-    if (destination.valid())
-    {
-        
-    }
-}
 
 void pseudo::calculate_march_moves(const Square origin, const Piece piece, const Offset offset)
 {
@@ -531,10 +452,6 @@ void pseudo::calculate_march_moves(const Square origin, const Piece piece, const
 
         }
     }
-
-
-
-
 
 
     int r1 = rank(sq) + dir.horizontal, f1 = file(sq) + dir.vertical;
@@ -606,53 +523,6 @@ void pseudo::calculate_promotion_moves()
     else LookupTable::PSEUDO_LEGAL[hashSquarePiecePlayer(sq, piece, player)].emplace_back(sq, loc, piece, player, Piece::Empty, marked, flag);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-
-
-/*
-
-#include "lookup_table.h"
-#include "config.h"
-
-
-
-
-#define hashPass() (0)
-#define hashPlayer(player) (player)
-#define hashPlayerSide(player, side) (player << Config::SIDE_BITS ^ side)
-#define hashSquarePiece(square, piece) (square << Config::PIECE_BITS ^ piece)
-#define hashSquarePieceRay(square, piece, ray) (((square << Config::PIECE_BITS ^ piece) << Config::RAY_BITS) ^ ray)
-#define hashSquarePiecePlayer(square, piece, player) (((square << Config::PIECE_BITS ^ piece) << Config::PLAYER_BITS) ^ player)
-#define hashSquarePiecePlayerFlag(square, piece, player, flag) (((square << Config::PIECE_BITS ^ piece) << Config::PLAYER_BITS) ^ player)
-#define hashSquareOffset(square, offset) (0)
-#define hashPieceOffsetFlag(piece, offset, flag) (0)
-#define hashSquareFlag(square, flag) (0) // OFFSETS
-#define hashSquarePlayerFlag(square, player, flag) (0) // OFFSETS
-
-
-
-Ray ray(const int horizontal, const int vertical);
-
-
-
-
-#define rank(sq) (sq / Config::COL_SIZE)
-#define file(sq) (sq % Config::COL_SIZE)
-#define square(r, f) (static_cast<Square>(r * Config::COL_SIZE + f))
-
 static bool isPromotionSquare(const Square sq, const Player player)
 {
     switch (player)
@@ -690,27 +560,7 @@ static bool isValidSquare(const int r, const int f)
 }
 --------------------------------------------------------------------------
 
-inline static void leap(const Square sq, const Piece piece, const Direction& dir)
-{
-    const int r = rank(sq) + dir.horizontal, f = file(sq) + dir.vertical;
 
-    if (isValidSquare(r, f))
-    {
-        LookupTable::PSEUDO_LEGAL[hash(sq, piece)].emplace_back(sq, square(r, f), piece, Flag::Leap);
-    }
-}
-
-inline static void slide(const Square sq, const Piece piece, const Direction& dir)
-{
-    int r = rank(sq) + dir.horizontal, f = file(sq) + dir.vertical;
-
-    while (isValidSquare(r, f))
-    {
-        LookupTable::PSEUDO_LEGAL[hash(sq, piece, ray(dir.horizontal, dir.vertical))].emplace_back(sq, square(r, f), piece, Flag::Slide);
-
-        r += dir.horizontal, f += dir.vertical;
-    }
-}
 
 inline static void push(const Square sq, const Piece piece, const Direction& dir)
 {
@@ -764,101 +614,6 @@ inline static void promote(const Square sq, const Square loc, const Square marke
     }
 
     else LookupTable::PSEUDO_LEGAL[hashSquarePiecePlayer(sq, piece, player)].emplace_back(sq, loc, piece, player, Piece::Empty, marked, flag);
-}
-
-inline static void castle()
-{
-    
-}
-
-
-void PSEUDO::allocate()
-{
-    for (const Square& sq: BOARD::VALID_SQUARES)
-    {
-        for (const Piece& piece: PIECE::PIECE_LIST)
-        {
-            // allocate leap //
-            if (PIECE::LEAP_ABILITY[piece])
-            {
-                LEAP[hashSquarePiece(sq, piece)] = std::vector<Move>();
-            }
-
-            // allocate slide //
-            for (const Ray& ray: PSEUDO::RAY[hashSquarePiece(sq, piece)])
-            {
-                SLIDE[hashSquarePieceRay(sq, piece, ray)] = std::vector<Move>();
-            }
-
-            // allocate push and advance //
-            for (const Color& player: PLAYER::COLOR_LIST)
-            {
-                PUSH[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
-                ADVANCE[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
-                ENPASSANT[hashSquarePiecePlayer(sq, piece, player)] = std::vector<Move>();
-            }
-        }
-    }
-
-    // allocate castle //
-}
-
-void PSEUDO::deallocate()
-{
-    for (const Square& sq: BOARD::VALID_SQUARES)
-    {
-        for (const Piece& piece: PIECE::PIECE_LIST)
-        {
-            
-        }
-    }
-}
-
-
-void LookupTable::initialize()
-{
-    for (const Square sq: Config::VALID_SQUARES)
-    {
-        for (const Piece piece: Config::PIECE_LIST)
-        {
-            for (const Direction& dir: PIECE::DIRECTIONS[piece])
-            {
-                switch (dir.flag)
-                {
-                    case (Leap):     leap(sq, piece, dir);     break;
-                    case (Slide):    slide(sq, piece, dir);    break;
-                    case (Push):     push(sq, piece, dir);     break;
-                    case (SideWays): push(sq, piece, dir);     break;
-                    case (Advance):  advance(sq, piece, dir);  break;
-
-                    default: break;
-                }
-            }
-        }
-    }
-
-    PSEUDO::castle();
-}
-
-
-void init(Piece piece, std::vector<Direction> directions)
-{
-    for (const Square sq: Config::VALID_SQUARES)
-    {  
-        for (const Direction& dir: directions)
-        {
-            switch (dir.flag)
-            {
-                case (Leap):     leap(sq, piece, dir);     break;
-                case (Slide):    slide(sq, piece, dir);    break;
-                case (Push):     push(sq, piece, dir);     break;
-                case (SideWays): push(sq, piece, dir);     break;
-                case (Advance):  advance(sq, piece, dir);  break;
-
-                default: break;
-            }
-        }
-    }
 }
 
 */
