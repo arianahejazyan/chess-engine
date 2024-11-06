@@ -30,9 +30,14 @@ namespace pseudo
 extern unsigned int KING_MOVEMENT;
 extern unsigned int KNIGHT_MOVEMENT;
 
+extern unsigned int QUEEN_MOVEMENT[8];
+extern unsigned int ROOK_MOVEMENT[4];
+extern unsigned int BISHOP_MOVEMENT[4];
 
-void crawl(Piece piece, unsigned int& idx);
 
+void crawl(Piece piece, unsigned int& idx, unsigned int movement);
+
+void slide(Offset offset, unsigned int& idx, unsigned int movement);
 
 // 2 crawl, 8 slide, 8 march, 8 castle
 extern unsigned int start[board_size][26], range[board_size][26];

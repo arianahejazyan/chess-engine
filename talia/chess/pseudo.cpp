@@ -114,19 +114,6 @@ inline static void calculate_slide_squares(Square sq, Offset offset, vector<Squa
     }
 }
 
-inline static void calculate_crawl_squares(Square sq, Piece piece, vector<Square>& vec)
-{
-    for (Offset offset: patterns[piece - 1])
-    {
-        target(sq, offset)
-
-        if (valid_square(r, f))
-        {   
-            vec.push_back(Spot(r, f));
-        }
-    }
-}
-
 void Pseudo::init(Config config)
 {
     for (Square sq = 0; sq < board_size; ++sq)
@@ -156,8 +143,12 @@ void Pseudo::init(Config config)
 namespace pseudo
 {
 
-unsigned int KING_MOVEMENT = 0;
+unsigned int KING_MOVEMENT   = 0;
 unsigned int KNIGHT_MOVEMENT = 1;
+
+unsigned int QUEEN_MOVEMENT[8]  = {2, 3, 4, 5, 6, 7, 8, 9};
+unsigned int ROOK_MOVEMENT[4]   = {3, 5, 6, 8};
+unsigned int BISHOP_MOVEMENT[4] = {2, 4, 7, 9};
 
 unsigned int start[board_size][26], range[board_size][26];
 
@@ -177,17 +168,20 @@ void generate(array<Square, 1000> arr)
 
 void initialize()
 {
-    unsigned int idx = 0;
+    unsigned int idx = 0, movement = 0;
 
     for (Piece piece: {King, Knight})
     {
-        crawl(piece, idx);
+        crawl(piece, idx, movement++);
     }
 
-    // crawl(King, idx);
+    for (Offset offset: patterns[Queen - 1])
+    {
+        slide(offset, idx, movement++);
+    }
 }
 
-void crawl(Piece piece, unsigned int& idx)
+void crawl(Piece piece, unsigned int& idx, unsigned int movement)
 {
     for (Square sq = 0; sq < board_size; ++sq)
     {
@@ -200,14 +194,36 @@ void crawl(Piece piece, unsigned int& idx)
 
             if (valid_square(r, f))
             {
-                squares[idx + count] = Spot(r, f);
-
-                count++;
+                squares[idx + count++] = Spot(r, f);
             }
         }
 
-        start[sq][piece == King ? KING_MOVEMENT: KNIGHT_MOVEMENT] = idx;
-        range[sq][piece == King ? KING_MOVEMENT: KNIGHT_MOVEMENT] = count;
+        start[sq][movement] = idx;
+        range[sq][movement] = count;
+
+        idx += count;
+    }
+}
+
+void slide(Offset offset, unsigned int& idx, unsigned int movement)
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        unsigned int count = 0;
+
+        int r = Rank(sq) + offset.vertical;
+        int f = File(sq) + offset.horizontal;
+
+        while (valid_square(r, f))
+        {
+            squares[idx + count++] = Spot(r, f);
+            
+            r += offset.vertical;
+            f += offset.horizontal;
+        }
+
+        start[sq][movement] = idx;
+        range[sq][movement] = count;
 
         idx += count;
     }
