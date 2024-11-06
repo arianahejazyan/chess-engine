@@ -24,8 +24,6 @@ class PseudoTest: public ::testing::Test
         }
 };
 
-// #define CHECK(_sq, _type, _expected) Square sq = _sq; int type = _type; vector<Square> expected = _expected; EXPECT_EQ(range[sq][t], expected.size()); for (int i = 0; i < expected.size(); ++i){EXPECT_EQ(squares[start[sq][t] + i], expected[i]);}
-
 void check(Square sq, int movement, initializer_list<Square> expected)
 {
     EXPECT_EQ(range[sq][movement], expected.size());
@@ -39,83 +37,19 @@ void check(Square sq, int movement, initializer_list<Square> expected)
 
 TEST_F(PseudoTest, King)
 {
-    check(0,   King - 1, {9, 8, 1});
-    check(72,  King - 1, {87, 86, 85, 73, 71, 59, 58, 57});
-    check(159, King - 1, {158,151,150});
+    check(0,   KING_MOVEMENT, {9, 8, 1});
+    check(72,  KING_MOVEMENT, {87, 86, 85, 73, 71, 59, 58, 57});
+    check(159, KING_MOVEMENT, {158,151,150});
+}
 
-
-    /*
-    int t = 0;
-
-    sq = 0;
-    
-    expected = {9, 8, 1};
-
-    EXPECT_EQ(range[sq][t], expected.size());
-
-    for (int i = 0; i < expected.size(); ++i)
-    {
-        EXPECT_EQ(squares[start[sq][t] + i], expected[i]);
-    }
-
-    
-
-    EXPECT_EQ(range[0][0], 0);
-    EXPECT_EQ(squares[start[0][0]], 0);
-    EXPECT_EQ(squares[start[0][0] + 1], 0);
-    EXPECT_EQ(squares[start[0][0] + 2], 0);
-
-    Square sq = 0;
-    Square expected[range[sq][0]] = {}
-    for (int i = 0; i < range[sq][0]; ++i)
-    {
-        EXPECT_EQ(squares[start[0][0] + 2], 0);
-    }
-    */
-
-    /*
-    crawl(King, idx);
-
-    EXPECT_EQ(squares[0], 0);
-    EXPECT_EQ(squares[1], 0);
-    EXPECT_EQ(squares[2], 0);
-    EXPECT_EQ(squares[3], 0);
-    EXPECT_EQ(squares[4], 0);
-
-    //EXPECT_EQ(start[0][0], 20);
-
-    EXPECT_EQ(idx, 5);*/
+TEST_F(PseudoTest, Knight)
+{
+    check(0,   KNIGHT_MOVEMENT, {17, 10});
+    check(72,  KNIGHT_MOVEMENT, {101, 99, 88, 84, 60, 56, 45, 43});
+    check(159, KNIGHT_MOVEMENT, {149, 142});
 }
 
 /*
-TEST_F(PseudoTest, AllSquares)
-{
-    // precalculate_all_squares();
-}
-
-TEST_F(PseudoTest, CrawlSquares)
-{
-    init_crawl_squares();
-
-    int count = 0;
-
-    iterate_crawl count += crawl_squares[sq][piece % 5].size();
-
-    EXPECT_EQ(count, 67);
-}
-*/
-/*
-TEST_F(PseudoTest, Crawl)
-{
-    pseudo.init(config);
-
-    EXPECT_EQ(pseudo.crawl[0][0], vector<Square>({9, 8, 1}));
-    EXPECT_EQ(pseudo.crawl[72][0], vector<Square>({87, 86, 85, 73, 71, 59, 58, 57}));
-
-    EXPECT_EQ(pseudo.crawl[0][1], vector<Square>({17, 10}));
-    EXPECT_EQ(pseudo.crawl[72][1], vector<Square>({101, 99, 88, 84, 60, 56, 45, 43}));
-}
-
 TEST_F(PseudoTest, Slide)
 {
     pseudo.init(config);
