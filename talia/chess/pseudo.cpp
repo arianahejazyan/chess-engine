@@ -19,7 +19,7 @@ inline static void calculate_march_squares(Square sq, Player player, vector<Squa
 {
 
 }
-*/
+
 
 namespace pseudo
 {
@@ -150,6 +150,71 @@ void Pseudo::init(Config config)
         }
     }
 }
+
+*/
+
+namespace pseudo
+{
+
+unsigned int KING_MOVEMENT = 0;
+unsigned int KNIGHT_MOVEMENT = 1;
+
+unsigned int start[board_size][26], range[board_size][26];
+
+array<Square, 100000> squares;
+
+/*
+void generate(array<Square, 1000> arr)
+{
+    unsigned int idx = 0;
+    
+    for (Piece piece: {King, Knight})
+    {
+        crawl(piece, idx, arr);
+    }
+}
+*/
+
+void initialize()
+{
+    unsigned int idx = 0;
+
+    for (Piece piece: {King, Knight})
+    {
+        crawl(piece, idx);
+    }
+
+    // crawl(King, idx);
+}
+
+void crawl(Piece piece, unsigned int& idx)
+{
+    for (Square sq = 0; sq < board_size; ++sq)
+    {
+        unsigned int count = 0;
+
+        for (Offset offset: patterns[piece - 1])
+        {
+            int r = Rank(sq) + offset.vertical;
+            int f = File(sq) + offset.horizontal;
+
+            if (valid_square(r, f))
+            {
+                squares[idx + count] = Spot(r, f);
+
+                count++;
+            }
+        }
+
+        start[sq][piece == King ? KING_MOVEMENT: KNIGHT_MOVEMENT] = idx;
+        range[sq][piece == King ? KING_MOVEMENT: KNIGHT_MOVEMENT] = count;
+
+        idx += count;
+    }
+}
+
+}; // namespace
+
 
 /*
 namespace pseudo
