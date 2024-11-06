@@ -1,36 +1,92 @@
 #include <gtest/gtest.h>
 #include "pseudo.h"
 
+using namespace pseudo;
 
 class PseudoTest: public ::testing::Test
 {
     protected:
 
-        Pseudo pseudo;
+        Square sq;
 
-        Config config;
+        vector<Square> expected;
 
-        /*
+        unsigned int idx = 0;
 
-        void CleanPseudoCrawl();
-
-        void SetUp() override
+        static void SetUpTestSuite() 
         {
-            // Initialize or clear crawl_squares before each test
-            crawl_squares.assign(board_size, std::vector<std::vector<Spot>>(6));
+            initialize();
         }
 
-        void TearDown() override
+        static void TearDownTestSuite() 
         {
-            // Clean up if necessary
-            for (auto& squares_per_piece : crawl_squares) {
-                for (auto& piece_moves : squares_per_piece) {
-                    piece_moves.clear();
-                }
-            }
+            // clear();
         }
-        */
 };
+
+// #define CHECK(_sq, _type, _expected) Square sq = _sq; int type = _type; vector<Square> expected = _expected; EXPECT_EQ(range[sq][t], expected.size()); for (int i = 0; i < expected.size(); ++i){EXPECT_EQ(squares[start[sq][t] + i], expected[i]);}
+
+void check(Square sq, int movement, initializer_list<Square> expected)
+{
+    EXPECT_EQ(range[sq][movement], expected.size());
+
+    int i = 0;
+    for (Square target: expected)
+    {
+        EXPECT_EQ(squares[start[sq][movement] + i++], target);
+    }
+}
+
+TEST_F(PseudoTest, King)
+{
+    check(0,   King - 1, {9, 8, 1});
+    check(72,  King - 1, {87, 86, 85, 73, 71, 59, 58, 57});
+    check(159, King - 1, {158,151,150});
+
+
+    /*
+    int t = 0;
+
+    sq = 0;
+    
+    expected = {9, 8, 1};
+
+    EXPECT_EQ(range[sq][t], expected.size());
+
+    for (int i = 0; i < expected.size(); ++i)
+    {
+        EXPECT_EQ(squares[start[sq][t] + i], expected[i]);
+    }
+
+    
+
+    EXPECT_EQ(range[0][0], 0);
+    EXPECT_EQ(squares[start[0][0]], 0);
+    EXPECT_EQ(squares[start[0][0] + 1], 0);
+    EXPECT_EQ(squares[start[0][0] + 2], 0);
+
+    Square sq = 0;
+    Square expected[range[sq][0]] = {}
+    for (int i = 0; i < range[sq][0]; ++i)
+    {
+        EXPECT_EQ(squares[start[0][0] + 2], 0);
+    }
+    */
+
+    /*
+    crawl(King, idx);
+
+    EXPECT_EQ(squares[0], 0);
+    EXPECT_EQ(squares[1], 0);
+    EXPECT_EQ(squares[2], 0);
+    EXPECT_EQ(squares[3], 0);
+    EXPECT_EQ(squares[4], 0);
+
+    //EXPECT_EQ(start[0][0], 20);
+
+    EXPECT_EQ(idx, 5);*/
+}
+
 /*
 TEST_F(PseudoTest, AllSquares)
 {
@@ -48,6 +104,7 @@ TEST_F(PseudoTest, CrawlSquares)
     EXPECT_EQ(count, 67);
 }
 */
+/*
 TEST_F(PseudoTest, Crawl)
 {
     pseudo.init(config);
@@ -72,3 +129,4 @@ TEST_F(PseudoTest, Slide)
     EXPECT_EQ(pseudo.slide[28][6], vector<Square>({17, 9, 1}));
     EXPECT_EQ(pseudo.slide[28][7], vector<Square>({16}));
 }
+*/
