@@ -142,9 +142,19 @@ TEST_F(ParserTest, ParseRight)
     EXPECT_FALSE(parse_right("@", QueenSide, pos));
 }
 
+TEST_F(ParserTest, ParseFiftyRule)
+{
+    EXPECT_TRUE(parse_fifty_rule(pos, "30"));
+    EXPECT_EQ(pos.fifty_rule, 30);
 
+    EXPECT_TRUE(parse_fifty_rule(pos, "+20"));
+    EXPECT_EQ(pos.fifty_rule, 20);
 
-
+    EXPECT_FALSE(parse_fifty_rule(pos, ""));
+    EXPECT_FALSE(parse_fifty_rule(pos, " "));
+    EXPECT_FALSE(parse_fifty_rule(pos, "#"));
+    EXPECT_FALSE(parse_fifty_rule(pos, "-3"));
+}
 
 TEST_F(ParserTest, ParseBoard)
 {
@@ -179,16 +189,19 @@ TEST_F(ParserTest, ParseDigitError)
 
 TEST_F(ParserTest, ParseInteger)
 {
-    EXPECT_TRUE(parse_integer("123", integer));
-    EXPECT_EQ(integer, 123);
-}
+    EXPECT_TRUE(parse_integer("12", integer));
+    EXPECT_EQ(integer, 12);
 
-TEST_F(ParserTest, ParseIntegerError)
-{
+    EXPECT_TRUE(parse_integer("+9", integer));
+    EXPECT_EQ(integer, 9);
+
+    EXPECT_TRUE(parse_integer("-6", integer));
+    EXPECT_EQ(integer, -6);
+
     EXPECT_FALSE(parse_integer("", integer));
     EXPECT_FALSE(parse_integer(" ", integer));
     EXPECT_FALSE(parse_integer("@", integer));
-    EXPECT_FALSE(parse_integer("+7", integer));
+    EXPECT_FALSE(parse_integer("+", integer));
 }
 
 TEST_F(ParserTest, ParseLocation)
