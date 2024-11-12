@@ -126,20 +126,28 @@ TEST_F(ParserTest, ParseTurn)
     EXPECT_FALSE(parse_turn("x", pos));
 }
 
+TEST_F(ParserTest, ParseState)
+{
+    EXPECT_TRUE(parse_state(pos, ""));
+
+    EXPECT_TRUE(parse_state(pos, ",1,0*,,,"));
+    EXPECT_EQ(pos.states[Blue], Alive);
+    EXPECT_EQ(pos.states[Yellow], Dead);
+    
+    EXPECT_FALSE(parse_state(pos, " "));
+    EXPECT_FALSE(parse_state(pos, "@"));
+}
+
 TEST_F(ParserTest, ParseRight)
 {
-    EXPECT_TRUE(parse_right("", KingSide, pos));
+    EXPECT_TRUE(parse_right(pos, "", KingSide));
 
-    EXPECT_TRUE(parse_right(",1", KingSide, pos));
-    EXPECT_EQ(pos.rights[Blue][KingSide], true);
-
-    EXPECT_TRUE(parse_right(",,,0", QueenSide, pos));
-    EXPECT_EQ(pos.rights[Green][QueenSide], false);
-
-    EXPECT_TRUE(parse_right(",,1$,,", QueenSide, pos));
+    EXPECT_TRUE(parse_right(pos, "0,,1$,,", QueenSide));
+    EXPECT_EQ(pos.rights[Red][QueenSide], false);
     EXPECT_EQ(pos.rights[Yellow][QueenSide], true);
 
-    EXPECT_FALSE(parse_right("@", QueenSide, pos));
+    EXPECT_FALSE(parse_right(pos, " ", KingSide));
+    EXPECT_FALSE(parse_right(pos, "@", QueenSide));
 }
 
 TEST_F(ParserTest, ParseFiftyRule)
