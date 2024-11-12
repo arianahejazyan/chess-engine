@@ -26,9 +26,9 @@ namespace parser
 
     bool parse_turn(string turn, Position& pos);
 
-    // parse state
+    bool parse_state(Position& pos, string state);
 
-    bool parse_right(string right, Side side, Position& pos);
+    bool parse_right(Position& pos, string right, Side side);
 
     // parse score
 
