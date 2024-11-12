@@ -150,6 +150,20 @@ TEST_F(ParserTest, ParseRight)
     EXPECT_FALSE(parse_right(pos, "@", QueenSide));
 }
 
+TEST_F(ParserTest, ParseScore)
+{
+    EXPECT_TRUE(parse_score(pos, ""));
+
+    EXPECT_TRUE(parse_score(pos, "80,0,+32,-40,,#"));
+    EXPECT_EQ(pos.scores[Red], 80);
+    EXPECT_EQ(pos.scores[Blue], 0);
+    EXPECT_EQ(pos.scores[Yellow], 32);
+    EXPECT_EQ(pos.scores[Green], -40);
+
+    EXPECT_FALSE(parse_score(pos, " "));
+    EXPECT_FALSE(parse_score(pos, "$"));
+}
+
 TEST_F(ParserTest, ParseFiftyRule)
 {
     EXPECT_TRUE(parse_fifty_rule(pos, "30"));
