@@ -4,6 +4,8 @@ using namespace definitions;
 
 namespace parser
 {
+    char lower(char ch);
+
     bool is_integer(const string& str);
     
     vector<string> split_string(const string& fen, char delimiter);

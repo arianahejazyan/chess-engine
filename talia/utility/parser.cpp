@@ -4,13 +4,28 @@
 
 namespace parser
 {
-    
+
+constexpr Player default_turn = Red;
+
 //int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,24,27};
 //int stones[20] = {3,9,15, ..., 21,24,27};
 
 //#define Spot(row, col) (row * dim + col - bricks[row])
 //#define Rank(square) ((square + bricks[square / 8]) / dim)
 //#define File(square) ((square + bricks[square / 8]) / dim)
+
+
+// parse by default if royals are not defined look for a king if only found one is royal else nothing
+
+char lower(char ch)
+{
+    if (ch >= 'A' && ch <= 'Z')
+    {
+        return ch + ('a' - 'A');
+    }
+
+    return ch;
+}
 
 bool is_integer(const string& str)
 {
@@ -193,7 +208,7 @@ bool parse_location(string loc, Square& sq)
 
     if (valid_square(row, col))
     {
-        sq = Spot(row, col);
+        sq = spot(row, col);
     }
 
     else return false;
@@ -235,16 +250,23 @@ bool parse_enpassant(string enpassant, Position& pos)
     return true;
 }
 
+
+
 bool parse_turn(string turn, Position& pos)
 {
-    if (turn.length() != 1) return false;
-    
-    switch (turn[0])
+    if (turn.length() == 0)
     {
-        case 'R': pos.turn = Red;    break;
-        case 'B': pos.turn = Blue;   break;
-        case 'Y': pos.turn = Yellow; break;
-        case 'G': pos.turn = Green;  break;
+        pos.turn = default_turn;
+
+        return true;
+    } 
+    
+    switch (lower(turn[0]))
+    {
+        case 'r': pos.turn = Red;    break;
+        case 'b': pos.turn = Blue;   break;
+        case 'y': pos.turn = Yellow; break;
+        case 'g': pos.turn = Green;  break;
         
         default: return false;
     }
