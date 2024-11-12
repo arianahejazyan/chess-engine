@@ -334,28 +334,58 @@ bool parse_state(Position& pos, string state)
 
 bool parse_right(Position& pos, string right, Side side)
 {
-    int idx = 0;
+    int player = 0;
     for (string part: split_string(right, ','))
     {
-        if (idx > 3) 
+        if (player >= player_size) 
         {
             break;
         }
 
         if (part.size() == 0)
         {
-            idx++;
+            player++;
 
             continue;
         }
 
         switch (part[0])
         {
-            case '1': pos.rights[idx++][side] = true;  break;
-            case '0': pos.rights[idx++][side] = false; break;
+            case '1': pos.rights[player++][side] = true;  break;
+            case '0': pos.rights[player++][side] = false; break;
         
             default: return false;
         }
+    }
+
+    return true;
+}
+
+bool parse_score(Position& pos, string score)
+{
+    int player = 0;
+    for (string part: split_string(score, ','))
+    {
+        if (player >= player_size) 
+        {
+            break;
+        }
+
+        if (part.size() == 0)
+        {
+            player++;
+
+            continue;
+        }
+
+        int player_score;
+
+        if (parse_integer(part, player_score))
+        {
+            pos.scores[player++] = player_score;
+        }
+
+        else return false;
     }
 
     return true;

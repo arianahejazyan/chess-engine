@@ -30,7 +30,7 @@ namespace parser
 
     bool parse_right(Position& pos, string right, Side side);
 
-    // parse score
+    bool parse_score(Position& pos, string score);
 
     bool parse_fifty_rule(Position& pos, string fifty_rule);
 
