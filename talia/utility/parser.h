@@ -6,25 +6,25 @@ namespace parser
 {
     char lower(char ch);
 
-    bool is_integer(const string& str);
-    
-    vector<string> split_string(const string& fen, char delimiter);
-
-    vector<string> split_board(const string& board);
-
     string substring(string str, char start, char end);
 
-    bool parse_digit(char ch, int& digit);
+    vector<string> split_string(string fen, char delimiter);
 
-    bool parse_integer(string str, int& integer);
+    vector<string> split_board(string board);
 
-    bool parse_location(string loc, Square& sq);
+    vector<string> split_status(string status, char open, char close, char delimiter);
 
-    bool parse_piece(char ch, Piece& piece);
+    bool parse_digit(int& digit, char ch);
 
-    bool parse_player(char ch, Player& player);
+    bool parse_integer(int& integer, string str);
 
-    bool parse_turn(string turn, Position& pos);
+    bool parse_square(Square& sq, string loc);
+
+    bool parse_piece(Piece& piece, char ch);
+
+    bool parse_player(Player& player, char ch);
+
+    bool parse_turn(Position& pos, string turn);
 
     bool parse_state(Position& pos, string state);
 
@@ -34,11 +34,15 @@ namespace parser
 
     bool parse_fifty_rule(Position& pos, string fifty_rule);
 
-    // parse royal
+    bool parse_royal(Position& pos, string royal);
 
-    bool parse_enpassant(string enpassant, Position& pos);
+    bool parse_enpassant(Position& pos, string enpassant);
 
-    bool parse_board(const string& board, Position& pos);
+    bool parse_status(Position& pos, string status);
+    
+    string remove_char(string str, char x);
 
-    bool parse_fen(string fen, Position& pos);
+    bool parse_board(Position& pos, string board);
+
+    bool parse_fen(Position& pos, string fen);
 };
