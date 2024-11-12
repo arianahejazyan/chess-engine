@@ -5,7 +5,8 @@
 namespace parser
 {
 
-constexpr Player default_turn = Red;
+//constexpr Player default_turn = Red;
+//constexpr bool default_right = false;
 
 //int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,24,27};
 //int stones[20] = {3,9,15, ..., 21,24,27};
@@ -276,17 +277,26 @@ bool parse_turn(string turn, Position& pos)
 
 bool parse_right(string right, Side side, Position& pos)
 {
-    vector<string> parts = split_string(right, ',');
-
-    if (parts.size() != 4) return false;
-
-    for (Player player = Red; player <= Green; ++player)
+    int idx = 0;
+    for (string part: split_string(right, ','))
     {
-        switch (parts[player][0])
+        if (idx > 3) 
         {
-            case '1': pos.rights[player][side] = true; break;
-            case '0': pos.rights[player][side] = false; break;
+            break;
+        }
 
+        if (part.size() == 0)
+        {
+            idx++;
+
+            continue;
+        }
+
+        switch (part[0])
+        {
+            case '1': pos.rights[idx++][side] = true;  continue;
+            case '0': pos.rights[idx++][side] = false; continue;
+        
             default: return false;
         }
     }
