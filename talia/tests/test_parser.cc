@@ -18,6 +18,14 @@ class ParserTest: public ::testing::Test
         string fen2 = "B-0,0,0,0-1,1,1,1-1,1,1,1-0,0,0,0-0-{'enPassant':('d3:d4','','','')}-x,x,x,yR,yN,yB,yK,yQ,yB,yN,yR,x,x,x/x,x,x,yP,yP,yP,yP,yP,yP,yP,yP,x,x,x/x,x,x,8,x,x,x/bR,bP,10,gP,gR/bN,bP,10,gP,gN/bB,bP,10,gP,gB/bQ,bP,10,gP,gK/bK,bP,10,gP,gQ/bB,bP,10,gP,gB/bN,bP,10,gP,gN/bR,bP,1,rP,8,gP,gR/x,x,x,8,x,x,x/x,x,x,1,rP,rP,rP,rP,rP,rP,rP,x,x,x/x,x,x,rR,rN,rB,rQ,rK,rB,rN,rR,x,x,x";
 };
 
+
+TEST_F(ParserTest, Lower)
+{
+    EXPECT_EQ(lower('B'), 'b');
+    EXPECT_EQ(lower('r'), 'r');
+    EXPECT_EQ(lower('@'), '@');
+}
+
 TEST_F(ParserTest, IsInteger)
 {
     EXPECT_TRUE(is_integer("3645"));
@@ -105,6 +113,22 @@ TEST_F(ParserTest, ParsePlayerError)
     EXPECT_FALSE(parse_player('#', player));
 }
 
+
+TEST_F(ParserTest, ParseTurn)
+{
+    EXPECT_TRUE(parse_turn("", pos));
+    EXPECT_EQ(pos.turn, Red);
+
+    EXPECT_TRUE(parse_turn("B", pos));
+    EXPECT_EQ(pos.turn, Blue);
+
+    EXPECT_FALSE(parse_turn(" ", pos));
+    EXPECT_FALSE(parse_turn("x", pos));
+}
+
+
+
+
 TEST_F(ParserTest, ParseBoard)
 {
     string board = "2rQ3=,#,x,59,bbN/31,x,9,,@,yP/,wK, v ,gR56,59";
@@ -181,11 +205,7 @@ TEST_F(ParserTest, ParseEnpassantError)
 
 }
 
-TEST_F(ParserTest, ParseTurn)
-{
-    EXPECT_TRUE(parse_turn("B", pos));
-    EXPECT_EQ(pos.turn, Blue);
-}
+
 
 TEST_F(ParserTest, ParseRight)
 {
@@ -201,6 +221,10 @@ TEST_F(ParserTest, ParseFen)
     EXPECT_TRUE(parse_fen(fen1, pos));
     EXPECT_TRUE(parse_fen(fen2, pos));
 }
+
+
+
+
 
 /*
 
