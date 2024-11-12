@@ -161,23 +161,51 @@ bool parse_digit(char ch, int& digit)
 
 bool parse_integer(string str, int& integer)
 {
-    int digit;
-    integer = 0;
-    
     if (str.empty())
     {
         return false;
     }
 
-    for (int i = 0; i < str.size(); i++)
+    int sign = +1, idx = 0;
+
+    if (str[0] == '+') 
     {
-        if (parse_digit(str[i], digit))
+        if (str.size() == 1)
+        {
+            return false;
+        }
+
+        else ++idx;
+    } 
+
+    else if (str[0] == '-') 
+    {
+        if (str.size() == 1)
+        {
+            return false;
+        }
+        
+        else 
+        {
+            sign = -1;
+            ++idx; 
+        }
+    }
+  
+    integer = 0;
+    for (; idx< str.size(); ++idx)
+    {
+        int digit;
+
+        if (parse_digit(str[idx], digit))
         {
             integer = integer * 10 + digit;
         }
 
         else return false;
     }
+
+    integer *= sign;
 
     return true;
 }
@@ -302,6 +330,28 @@ bool parse_right(string right, Side side, Position& pos)
     }
 
     return true;
+}
+
+bool parse_fifty_rule(Position& pos, string fifty_rule)
+{
+    int rule;
+
+    if (parse_integer(fifty_rule, rule))
+    {
+        if (rule < 0)
+        {
+            return false;
+        }
+
+        else
+        {
+            pos.fifty_rule = rule;
+
+            return true;            
+        }
+    }
+
+    else return false;
 }
 
 bool parse_fen(string fen, Position& pos)
