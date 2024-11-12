@@ -4,119 +4,31 @@
 
 namespace parser
 {
-    
-//int bricks[14] = {3,9,15,18,18,18,18,18,18,18,18,21,24,27};
-//int stones[20] = {3,9,15, ..., 21,24,27};
 
-//#define Spot(row, col) (row * dim + col - bricks[row])
-//#define Rank(square) ((square + bricks[square / 8]) / dim)
-//#define File(square) ((square + bricks[square / 8]) / dim)
-
-bool is_integer(const string& str)
+string remove_char(string str, char x)
 {
-    if (str.empty()) return false;
+    string result;
 
-    for (const char& ch: str)
+    for (char ch : str) 
     {
-        if (!isdigit(ch)) return false;
-    }
-
-    return true;
-}
-
-vector<string> split_string(const string& str, char delimiter)
-{
-    vector<string> result;
-    stringstream ss(str);
-    string token;
-
-    while (getline(ss, token, delimiter))
-    {
-        result.push_back(token);
+        if (ch != x) 
+        {
+            result += ch;
+        }
     }
 
     return result;
 }
 
-vector<string> split_board(const string& board)
+char lower(char ch)
 {
-    vector<string> rows = split_string(board, '/');
-
-    vector<string> output;
-    for (auto row = rows.rbegin(); row != rows.rend(); ++row)
+    if (ch >= 'A' && ch <= 'Z')
     {
-        vector<string> cols = split_string(*row, ',');
-
-        for (string col: cols)
-        {
-            output.push_back(col);
-        }
+        return ch + ('a' - 'A');
     }
 
-    return output;
+    return ch;
 }
-
-bool parse_piece(char ch, Piece& piece)
-{
-    switch (ch)
-    {
-        case 'P': piece = Pawn;   break;
-        case 'N': piece = Knight; break;
-        case 'B': piece = Bishop; break;
-        case 'R': piece = Rook;   break;
-        case 'Q': piece = Queen;  break;
-        case 'K': piece = King;   break;
-
-        default: return false;  
-    }
-
-    return true;
-}
-
-bool parse_player(char ch, Player& player)
-{
-    switch (ch)
-    {
-        case 'r': player = Red;    break;
-        case 'b': player = Blue;   break;
-        case 'y': player = Yellow; break;
-        case 'g': player = Green;  break;
-
-        default: return false;
-    }
-
-    return true;
-}
-
-bool parse_board(const string& board, Position& pos)
-{
-    vector<string> parts = split_board(board);
-
-    unsigned int count = 0;
-    for (const string& part: parts)
-    {
-        if (is_integer(part))
-        {
-            count += stoi(part);
-        }
-
-        else if (part.size() >= 2)
-        {
-            Piece piece;
-            Player player;
-
-            if (!parse_player(part[0], player)) continue;
-            if (!parse_piece(part[1], piece)) continue;
-    
-            pos.place(count++, piece, player);
-        }
-
-        if (count >= board_size) break;
-    }
-
-    return count == board_size;
-}
-
 
 string substring(string str, char start, char end)
 {
@@ -131,7 +43,77 @@ string substring(string str, char start, char end)
     return "";
 }
 
-bool parse_digit(char ch, int& digit)
+vector<string> split_string(string str, char delimiter)
+{
+    vector<string> result;
+    stringstream ss(str);
+    string token;
+
+    while (getline(ss, token, delimiter))
+    {
+        result.push_back(token);
+    }
+
+    if (!str.empty() && str.back() == delimiter)
+    {
+        result.push_back("");
+    }
+
+    return result;
+}
+
+vector<string> split_board(string board)
+{
+    vector<string> rows = split_string(board, '/'), output;
+
+    for (auto row = rows.rbegin(); row != rows.rend(); ++row)
+    {
+        vector<string> cols = split_string(*row, ',');
+
+        for (string col: cols)
+        {
+            output.push_back(col);
+        }
+    }
+
+    return output;
+}
+
+vector<string> split_status(string status, char open, char close, char delimiter)
+{
+    vector<string> result;
+    string slice;
+
+    int depth = 0;
+    for (char ch: status)
+    {
+        if (ch == open)
+        {
+            slice += ch;
+            ++depth;
+        }
+
+        else if (ch == close)
+        {
+            slice += ch;
+            --depth;
+        }
+
+        else if (ch == delimiter && depth == 0)
+        {
+            result.push_back(slice);
+            slice.clear();
+        }
+
+        else slice += ch;
+    }
+
+    result.push_back(slice);
+
+    return result;
+}
+
+bool parse_digit(int& digit, char ch)
 {
     if (ch >= '0' && ch <= '9')
     {
@@ -143,19 +125,45 @@ bool parse_digit(char ch, int& digit)
     return true;
 }
 
-bool parse_integer(string str, int& integer)
+bool parse_integer(int& integer, string str)
 {
-    int digit;
-    integer = 0;
-    
     if (str.empty())
     {
         return false;
     }
 
-    for (int i = 0; i < str.size(); i++)
+    int sign = +1, idx = 0;
+
+    if (str[0] == '+') 
     {
-        if (parse_digit(str[i], digit))
+        if (str.size() == 1)
+        {
+            return false;
+        }
+
+        else ++idx;
+    } 
+
+    else if (str[0] == '-') 
+    {
+        if (str.size() == 1)
+        {
+            return false;
+        }
+        
+        else 
+        {
+            sign = -1;
+            ++idx; 
+        }
+    }
+  
+    integer = 0;
+    for (; idx< str.size(); ++idx)
+    {
+        int digit;
+
+        if (parse_digit(digit, str[idx]))
         {
             integer = integer * 10 + digit;
         }
@@ -163,10 +171,12 @@ bool parse_integer(string str, int& integer)
         else return false;
     }
 
+    integer *= sign;
+
     return true;
 }
 
-bool parse_location(string loc, Square& sq)
+bool parse_square(Square& sq, string loc)
 {
     int row, col;
 
@@ -184,7 +194,7 @@ bool parse_location(string loc, Square& sq)
 
     else return false;
 
-    if (parse_integer(loc.substr(1), row))
+    if (parse_integer(row, loc.substr(1)))
     {
         row--;
     }
@@ -193,7 +203,7 @@ bool parse_location(string loc, Square& sq)
 
     if (valid_square(row, col))
     {
-        sq = Spot(row, col);
+        sq = spot(row, col);
     }
 
     else return false;
@@ -201,8 +211,222 @@ bool parse_location(string loc, Square& sq)
     return true;
 }
 
-bool parse_enpassant(string enpassant, Position& pos)
+bool parse_piece(Piece& piece, char ch)
 {
+    switch (lower(ch))
+    {
+        case 'p': piece = Pawn;   break;
+        case 'n': piece = Knight; break;
+        case 'b': piece = Bishop; break;
+        case 'r': piece = Rook;   break;
+        case 'q': piece = Queen;  break;
+        case 'k': piece = King;   break;
+
+        default: return false;  
+    }
+
+    return true;
+}
+
+bool parse_player(Player& player, char ch)
+{
+    switch (lower(ch))
+    {
+        case 'r': player = Red;    break;
+        case 'b': player = Blue;   break;
+        case 'y': player = Yellow; break;
+        case 'g': player = Green;  break;
+
+        default: return false;
+    }
+
+    return true;
+}
+
+bool parse_turn(Position& pos, string turn)
+{
+    if (turn.length() == 0)
+    {
+        return true;
+    } 
+    
+    switch (lower(turn[0]))
+    {
+        case 'r': pos.turn = Red;    break;
+        case 'b': pos.turn = Blue;   break;
+        case 'y': pos.turn = Yellow; break;
+        case 'g': pos.turn = Green;  break;
+        
+        default: return false;
+    }
+
+    return true;
+}
+
+bool parse_state(Position& pos, string state)
+{
+    int player = 0;
+    for (string part: split_string(state, ','))
+    {
+        if (player >= player_size) 
+        {
+            break;
+        }
+
+        if (part.size() == 0)
+        {
+            player++;
+
+            continue;
+        }
+
+        switch (part[0])
+        {
+            case '1': pos.states[player++] = Alive; break;
+            case '0': pos.states[player++] = Dead;  break;
+        
+            default: return false;
+        }
+    }
+
+    return true;
+}
+
+bool parse_right(Position& pos, string right, Side side)
+{
+    int player = 0;
+    for (string part: split_string(right, ','))
+    {
+        if (player >= player_size) 
+        {
+            break;
+        }
+
+        if (part.size() == 0)
+        {
+            player++;
+
+            continue;
+        }
+
+        switch (part[0])
+        {
+            case '1': pos.rights[player++][side] = true;  break;
+            case '0': pos.rights[player++][side] = false; break;
+        
+            default: return false;
+        }
+    }
+
+    return true;
+}
+
+bool parse_score(Position& pos, string score)
+{
+    int player = 0;
+    for (string part: split_string(score, ','))
+    {
+        if (player >= player_size) 
+        {
+            break;
+        }
+
+        if (part.size() == 0)
+        {
+            player++;
+
+            continue;
+        }
+
+        int player_score;
+
+        if (parse_integer(player_score, part))
+        {
+            pos.scores[player++] = player_score;
+        }
+
+        else return false;
+    }
+
+    return true;
+}
+
+bool parse_fifty_rule(Position& pos, string fifty_rule)
+{
+    int rule;
+
+    if (parse_integer(rule, fifty_rule))
+    {
+        if (rule < 0)
+        {
+            return false;
+        }
+
+        else
+        {
+            pos.fifty_rule = rule;
+
+            return true;            
+        }
+    }
+
+    else return false;
+}
+
+bool parse_royal(Position& pos, string royal)
+{
+    int player = 0;
+
+    for (string part: split_string(royal, ','))
+    {
+        if (player >= player_size) 
+        {
+            break;
+        }
+
+        if (parse_square(pos.royals[player], part))
+        {
+            player++;
+        }
+
+        else return false;
+    }
+
+    return true;
+}
+
+bool parse_enpassant(Position& pos, string enpassant)
+{
+    int player = 0;
+
+    for (string part: split_string(enpassant, ','))
+    {
+        if (player >= player_size) 
+        {
+            break;
+        }
+
+        vector<string> components = split_string(part, ':');
+
+        if (components.size() == 2)
+        {
+            bool r1 = parse_square(pos.marked[player], components[0]);
+            bool r2 = parse_square(pos.target[player], components[1]);
+
+            player++;
+
+            if (!(r1 && r2)) return false;
+        }
+
+        else return false;
+    }
+
+    return true;
+
+
+
+
+    /*
     vector<string> locations = split_string(substring(enpassant, '(', ')'), ',');
 
     if (locations.size() != 4)
@@ -223,10 +447,63 @@ bool parse_enpassant(string enpassant, Position& pos)
 
         else if (parts.size() == 2)
         {
-            bool r1 = parse_location(parts[0], pos.marked[p]);
-            bool r2 = parse_location(parts[1], pos.target[p]);
+            bool r1 = parse_square(pos.marked[p], parts[0]);
+            bool r2 = parse_square(pos.target[p], parts[1]);
 
             if (!(r1 && r2)) return false;
+        }
+
+        else return false;
+    }
+
+    return true;*/
+}
+
+bool parse_status(Position& pos, string status)
+{
+    for (char ch: {'{', '}', '\''})
+    {
+        status = remove_char(status, ch);
+    }
+
+    for (string statusx: split_status(status, '(', ')', ','))
+    {
+        vector<string> components = split_status(statusx, '(', ')', ':');
+
+        for (char ch: {'(', ')'})
+        {
+            components[1] = remove_char(components[1], ch);
+        }
+
+        // EXPECT_TRUE(parse_status(pos, "r:(g9,,),e:(,c4:c5,,,)"));
+
+        if (components.size() != 0)
+        {
+            switch (lower(components[0][0]))
+            {
+                case 'r':
+                {
+                    if (!parse_royal(pos, components[1]))
+                    {
+                        return false;
+                    }
+
+                    break;
+                }
+
+                case 'e':
+                {
+                    if (!parse_enpassant(pos, components[1]))
+                    {
+                        return false;
+                    }
+
+                    break;
+                }
+
+            
+                default: return false;
+            }
         }
 
         else return false;
@@ -235,76 +512,87 @@ bool parse_enpassant(string enpassant, Position& pos)
     return true;
 }
 
-bool parse_turn(string turn, Position& pos)
+
+
+bool parse_board(Position& pos, string board)
 {
-    if (turn.length() != 1) return false;
-    
-    switch (turn[0])
+    vector<string> parts = split_board(board);
+
+    unsigned int count = 0;
+    for (const string& part: parts)
     {
-        case 'R': pos.turn = Red;    break;
-        case 'B': pos.turn = Blue;   break;
-        case 'Y': pos.turn = Yellow; break;
-        case 'G': pos.turn = Green;  break;
-        
-        default: return false;
-    }
+        int val;
 
-    return true;
-}
-
-bool parse_right(string right, Side side, Position& pos)
-{
-    vector<string> parts = split_string(right, ',');
-
-    if (parts.size() != 4) return false;
-
-    for (Player player = Red; player <= Green; ++player)
-    {
-        switch (parts[player][0])
+        if (parse_integer(val, part))
         {
-            case '1': pos.rights[player][side] = true; break;
-            case '0': pos.rights[player][side] = false; break;
-
-            default: return false;
+            count += val;
         }
+
+        else if (part.size() >= 2)
+        {
+            Piece piece;
+            Player player;
+
+            if (!parse_player(player, part[0])) continue;
+            if (!parse_piece(piece, part[1])) continue;
+    
+            pos.place(count++, piece, player);
+        }
+
+        if (count >= board_size) break;
     }
 
-    return true;
+    return count == board_size;
 }
 
-bool parse_fen(string fen, Position& pos)
+bool parse_fen(Position& pos, string fen)
 {
     vector<string> parts = split_string(fen, '-');
 
-    if (parts.size() < 7)
+    if (parts.size() != 7 && parts.size() != 8)
     {
         return false;
     } 
 
-    if (!parse_turn(parts[0], pos))
+    if (!parse_turn(pos, parts[0]))
     {
         return false;
     }
 
-    if (!parse_right(parts[2], KingSide, pos))
+    if (!parse_state(pos, parts[1]))
     {
         return false;
     }
 
-    if (!parse_right(parts[3], QueenSide, pos))
+    if (!parse_right(pos, parts[2], KingSide))
+    {
+        return false;
+    }
+
+    if (!parse_right(pos, parts[3], QueenSide))
+    {
+        return false;
+    }
+
+    if (!parse_score(pos, parts[4]))
+    {
+        return false;
+    }
+
+    if (!parse_fifty_rule(pos, parts[5]))
     {
         return false;
     }
 
     if (parts.size() == 8)
-    {
-        if (!parse_enpassant(parts[6], pos))
+    {   
+        if (!parse_status(pos, parts[6]))
         {
             return false;
         }
     }
 
-    if (!parse_board(parts.back(), pos))
+    if (!parse_board(pos, parts.back()))
     {
         return false;
     }
