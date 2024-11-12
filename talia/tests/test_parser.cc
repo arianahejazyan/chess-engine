@@ -126,6 +126,23 @@ TEST_F(ParserTest, ParseTurn)
     EXPECT_FALSE(parse_turn("x", pos));
 }
 
+TEST_F(ParserTest, ParseRight)
+{
+    EXPECT_TRUE(parse_right("", KingSide, pos));
+
+    EXPECT_TRUE(parse_right(",1", KingSide, pos));
+    EXPECT_EQ(pos.rights[Blue][KingSide], true);
+
+    EXPECT_TRUE(parse_right(",,,0", QueenSide, pos));
+    EXPECT_EQ(pos.rights[Green][QueenSide], false);
+
+    EXPECT_TRUE(parse_right(",,1$,,", QueenSide, pos));
+    EXPECT_EQ(pos.rights[Yellow][QueenSide], true);
+
+    EXPECT_FALSE(parse_right("@", QueenSide, pos));
+}
+
+
 
 
 
@@ -207,14 +224,7 @@ TEST_F(ParserTest, ParseEnpassantError)
 
 
 
-TEST_F(ParserTest, ParseRight)
-{
-    EXPECT_TRUE(parse_right("1,1,0,0", QueenSide, pos));
-    EXPECT_EQ(pos.rights[Red][QueenSide], true);
-    EXPECT_EQ(pos.rights[Blue][QueenSide], true);
-    EXPECT_EQ(pos.rights[Yellow][QueenSide], false);
-    EXPECT_EQ(pos.rights[Green][QueenSide], false);
-}
+
 
 TEST_F(ParserTest, ParseFen)
 {
