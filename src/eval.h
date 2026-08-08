@@ -2,6 +2,7 @@
 
 #include "chess/constants.h"
 #include "chess/position.h"
+#include "nnue/nnue.h"
 #include "score.h"
 #include <array>
 
@@ -16,6 +17,6 @@ inline std::array<Score, chess::PIECE_NB> material = {
     100,  // Pawn
 };
 
-Score evaluate(const chess::Position& pos) noexcept;
+Score evaluate(const chess::Position& pos, const nnue::NNUE& nnue) noexcept;
 
 } // namespace athena

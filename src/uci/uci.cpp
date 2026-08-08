@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include "chess/position.h"
+#include "nnue/nnue.h"
 #include "uci/uci.h"
 #include "misc.h"
 
@@ -9,6 +10,7 @@ namespace athena::uci {
 
 UCIEngine::UCIEngine() {
     register_commands();
+    // nnue::nnue.load("/mnt/f/Projects/Hephaestus/network.bin");
 }
 
 void UCIEngine::register_commands() {
@@ -22,6 +24,9 @@ void UCIEngine::register_commands() {
     commands_["quit"]       = [this](std::istream& is) { quit(is); };
     commands_["perft"]      = [this](std::istream& is) { perft(is); };
     commands_["print"]      = [this](std::istream& is) { print(is); };
+    commands_["load"]       = [this](std::istream& is) { load(is); };
+    commands_["save"]       = [this](std::istream& is) { save(is); };
+    commands_["eval"]       = [this](std::istream& is) { eval(is); };
 }
 
 void UCIEngine::run(int argc, char** argv) {
@@ -117,6 +122,22 @@ void UCIEngine::stop(std::istream&) {
 
 void UCIEngine::quit(std::istream&) {
     engine_.stop();
+}
+
+void UCIEngine::load(std::istream& is) {
+    std::string bin;
+    is >> bin;
+    engine_.load(bin);
+}
+
+void UCIEngine::save(std::istream& is) {
+    std::string bin;
+    is >> bin;
+    engine_.save(bin);
+}
+
+void UCIEngine::eval(std::istream&) {
+    std::cout << engine_.evaluate() << std::endl;
 }
 
 void UCIEngine::perft(std::istream& is) {

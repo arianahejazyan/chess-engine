@@ -3,6 +3,7 @@
 #include "search.h"
 #include "chess/position.h"
 #include "eval.h"
+#include "nnue/nnue.h"
 
 namespace athena {
 
@@ -43,7 +44,7 @@ Score Search::search(Search::State& ss, chess::Position& pos, int depth, Score a
     selDepth = std::max(selDepth, ply);
 
     if (depth <= 0) {
-        return evaluate(pos);
+        return evaluate(pos, nnue::nn);
     }
 
     chess::Move moves[chess::MOVE_NB];

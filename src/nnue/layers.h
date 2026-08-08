@@ -2,48 +2,42 @@
 
 #include <algorithm>
 #include <cstddef>
-#include "nnue/simd.h"
+#include <cstdint>
+#include "nnue/network.h"
 
 namespace athena::nnue {
 
-template<std::size_t SIZE>
-void clipped_relu(float* __restrict__ input, float min_value, float max_value) noexcept {
-    for (std::size_t i = 0; i < SIZE; ++i) {
-        input[i] = std::min(max_value, std::max(min_value, input[i]));
-    }
+template <std::size_t SIZE>
+void add(int16_t* __restrict__ dst, 
+   const int16_t* __restrict__ src) noexcept 
+{
+    for (std::size_t i = 0; i < SIZE; ++i)
+        dst[i] += src[i];
 }
 
-template<std::size_t SIZE>
-void add(float* __restrict__ accumulator, const float* __restrict__ weights) noexcept {
-    for (std::size_t i = 0; i < SIZE; ++i) {
-        accumulator[i] += weights[i];
-    }
+template <std::size_t SIZE>
+void sub(int16_t* __restrict__ dst, 
+   const int16_t* __restrict__ src) noexcept
+{
+    for (std::size_t i = 0; i < SIZE; ++i)
+        dst[i] -= src[i];
 }
 
-template<std::size_t SIZE>
-void sub(float* __restrict__ accumulator, const float* __restrict__ weights) noexcept {
-    for (std::size_t i = 0; i < SIZE; ++i) {
-        accumulator[i] -= weights[i];
-    }
+template <int32_t MIN = 0, int32_t MAX = 255>
+inline int32_t screlu(int16_t x) noexcept {
+    x = std::max(int16_t(MIN), x);
+    x = std::min(int16_t(MAX), x);
+    return int32_t(x) * int32_t(x);
 }
 
-template<std::size_t INPUT_SIZE, std::size_t OUTPUT_SIZE>
-void affine(const float* __restrict__ input, float* __restrict__ output, const float* __restrict__ weights, const float* __restrict__ biases) noexcept {
-
-    // Compute matrix multiplication: output = weights * input
-    for (std::size_t o = 0; o < OUTPUT_SIZE; ++o) {
-        const float* __restrict__ w = &weights[o * INPUT_SIZE];
-        float sum = 0.0f;
-
-        for (std::size_t i = 0; i < INPUT_SIZE; ++i) {
-            sum += w[i] * input[i];
-        }
-
-        output[o] = sum;
-    }
-    
-    // Then add bias vector
-    add<OUTPUT_SIZE>(output, biases);
+template <std::size_t SIZE, int32_t MIN = 0, int32_t MAX = 255>
+int32_t screlu_dot(const int16_t* __restrict__ acc,
+                   const int16_t* __restrict__ w) noexcept
+{
+    int32_t sum = 0;
+    for (std::size_t i = 0; i < SIZE; ++i)
+        sum += screlu<MIN, MAX>(acc[i]) * int32_t(w[i]);
+    return sum;
 }
 
 } // namespace athena

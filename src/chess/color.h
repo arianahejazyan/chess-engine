@@ -6,7 +6,7 @@ namespace athena::chess {
 
 class Color {
 public: 
-    enum class ID : uint8_t {
+    enum ID : uint8_t {
         Red    = 0,
         Blue   = 1,
         Yellow = 2,
@@ -45,6 +45,10 @@ public:
     constexpr bool same(Color::ID color) const noexcept { return (static_cast<uint8_t>(id_) & 1) == (static_cast<uint8_t>(color) & 1); }
     constexpr bool diff(Color::ID color) const noexcept { return (static_cast<uint8_t>(id_) & 1) != (static_cast<uint8_t>(color) & 1); }
    
+    Color rotate(Color perspective) const noexcept {
+        return (id_ - perspective.id()) & 0b11;
+    }
+
     constexpr ID id() const noexcept { return id_; }
     
 private:

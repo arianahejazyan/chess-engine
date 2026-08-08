@@ -26,6 +26,9 @@ private:
     void quit(std::istream& is);
 
     // Debug Commands
+    void load(std::istream& is);
+    void save(std::istream& is);
+    void eval(std::istream& is);
     void perft(std::istream& is);
     void print(std::istream& is);
 

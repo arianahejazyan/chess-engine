@@ -4,11 +4,20 @@
 
 namespace athena::nnue {
 
-inline uint make_index(chess::Square sq, chess::Piece piece, chess::Color color) noexcept {
-    return 
-        static_cast<uint8_t>(sq.compress().id()) +
-        static_cast<uint8_t>(piece.id()) * chess::SQUARE_NB +
-        static_cast<uint8_t>(color.id()) * chess::SQUARE_NB * chess::PIECE_NB;
-}
+class Feature {
+public:
+    Feature(chess::Square sq, chess::Piece piece, chess::Color color, chess::Color perspective) noexcept {
+        id_ = sq.rotate(perspective).id() +
+        piece.id() * 160 +
+        color.rotate(perspective).id() * 160 * chess::PIECE_NB;
+    }
+
+    int id() const noexcept {
+        return id_;
+    }
+
+private:
+    int id_;
+};
 
 } // namespace athena

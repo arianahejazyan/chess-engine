@@ -6,7 +6,7 @@ namespace athena::chess {
 
 class Piece {
 public: 
-    enum class ID : uint8_t {
+    enum ID : uint8_t {
         King   = 0,
         Knight = 1,
         Bishop = 2,

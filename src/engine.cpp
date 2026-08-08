@@ -2,11 +2,13 @@
 #include "chess/position.h"
 #include "chess/movegen.h"
 #include "chess/perft.h"
+#include "nnue/nnue.h"
 
 namespace athena {
 
 Engine::Engine() {
     pos_.init(chess::Position::startpos());
+    // nnue::nnue.refresh_accumulator(pos_);
 }
 
 void Engine::go(Search::Limits& limits) {
@@ -14,10 +16,11 @@ void Engine::go(Search::Limits& limits) {
 }
 
 void Engine::stop() {}
-    
+
 void Engine::set_position(const chess::Position::FEN& fen, const std::vector<std::string>& moves) {
     pos_.init(fen);
     for (auto move: moves) pos_.make_move(move);
+    // nnue::nnue.refresh_accumulator(pos_);
 }
 
 void Engine::perft(int depth) {
