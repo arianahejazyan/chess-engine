@@ -1,6 +1,23 @@
 #pragma once
 
+#include <cstdint>
+
 namespace athena::chess {
+
+enum BoardRepresentation {
+    Athena,
+    ChessCom,
+    NoStones,
+    Compressed,
+    BORAD_REPRESENTATION
+};
+
+constexpr std::size_t BOARD_SIZE[BORAD_REPRESENTATION] = {
+    256, // 16x16 board
+    196, // 14x14 board: first/last row and column removed
+    160, // stone squares removed
+    216, // first/last 20 squares removed; index = sq - 20
+};
 
 constexpr int
 MOVETYPE_NB = 5, 

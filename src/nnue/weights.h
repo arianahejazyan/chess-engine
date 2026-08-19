@@ -19,4 +19,6 @@ private:
     static constexpr Header HEADER{{'N', 'N', 'U', 'E'}, 1};
 };
 
+// auto weights = std::filesystem::path("bin") / "nnue_weights.bin";
+
 } // namespace athena
