@@ -3,11 +3,9 @@
 #include <iostream>
 #include <cstdint>
 #include <immintrin.h>
-#include "constants.h"
-#include "square.h"
-#include "color.h"
+#include "chess.h"
 
-namespace athena::chess {
+namespace athena {
 
 class alignas(32) Bitboard {
 public:

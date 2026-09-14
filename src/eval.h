@@ -1,22 +1,24 @@
 #pragma once
 
-#include "chess/constants.h"
-#include "chess/position.h"
-#include "nnue/nnue.h"
-#include "score.h"
-#include <array>
+// #include "chess/constants.h"
+// #include "chess/position.h"
+// #include "nnue/nnue.h"
+// #include "score.h"
+// #include <array>
 
 namespace athena {
 
-inline std::array<Score, chess::PIECE_NB> material = {
-    0,    // King
-    300,  // Knight
-    350,  // Bishop
-    500,  // Rook
-    1000, // Queen
-    100,  // Pawn
-};
+// #define EvalFileDefaultName "nn-a7b39c12f4e8.nnue"
 
-Score evaluate(const chess::Position& pos, const nnue::NNUE& nnue) noexcept;
+// inline std::array<Score, chess::PIECE_NB> material = {
+//     0,    // King
+//     300,  // Knight
+//     350,  // Bishop
+//     500,  // Rook
+//     1000, // Queen
+//     100,  // Pawn
+// };
+
+// Score evaluate(const chess::Position& pos, const nnue::NNUE& nnue) noexcept;
 
 } // namespace athena

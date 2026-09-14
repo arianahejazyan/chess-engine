@@ -1,38 +1,38 @@
-#pragma once
+// #pragma once
 
-#include <chess/position.h>
-#include "chess/constants.h"
-#include "score.h"
+// #include <chess/position.h>
+// #include "chess/constants.h"
+// #include "score.h"
 
-namespace athena {
+// namespace athena {
 
-class Search {
-public:
-    struct Limits {
-    public:
-        int maxDepth = chess::PLAY_NB;
-    };
+// class Search {
+// public:
+//     struct Limits {
+//     public:
+//         int maxDepth = chess::PLAY_NB;
+//     };
 
-    struct State {
-    public:
-        chess::Move bestMove;
-        Score bestScore;
+//     struct State {
+//     public:
+//         chess::Move bestMove;
+//         Score bestScore;
     
-        State() { reset(); }
+//         State() { reset(); }
     
-        void reset() {
-            bestMove = chess::Move{};
-            bestScore = -SCORE_INFINITE;
-        }
-    };
+//         void reset() {
+//             bestMove = chess::Move{};
+//             bestScore = -SCORE_INFINITE;
+//         }
+//     };
 
-    void start_thinking(const chess::Position&, const Search::Limits&);
+//     void start_thinking(const chess::Position&, const Search::Limits&);
 
-private:
-    uint64_t nodes = 0;
-    int selDepth = 0;
+// private:
+//     uint64_t nodes = 0;
+//     int selDepth = 0;
 
-    Score search(Search::State& ss, chess::Position& pos, int depth, Score alpha, Score beta, int ply);
-};
+//     Score search(Search::State& ss, chess::Position& pos, int depth, Score alpha, Score beta, int ply);
+// };
 
-} // namespace athena
+// } // namespace athena

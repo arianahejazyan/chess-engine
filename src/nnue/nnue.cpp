@@ -1,26 +1,28 @@
-#include "nnue/nnue.h"
-#include "nnue/network.h"
+// #include "nnue/nnue.h"
+// #include "nnue/architecture.h"
+// #include "nnue/network.h"
+// #include "ops.h"
+// #include <cstdint>
 
-namespace athena::nnue {
+// namespace athena::nnue {
 
-// inline int32_t NNUE::evaluate(const chess::Position& pos) const noexcept {
+// int32_t NNUE::evaluate(
+//     const Accumulator& self, 
+//     const Accumulator& next,
+//     const Accumulator& ally, 
+//     const Accumulator& prev) const noexcept {
 
-//     const auto stm = pos.turn();
 //     int32_t score = 0;
+//     score += ops::screlu_dot<arch::HIDDEN, arch::SCRELU_MIN, arch::SCRELU_MAX>(self.data, network_.l2.weights[0 * arch::HIDDEN]);
+//     score += ops::screlu_dot<arch::HIDDEN, arch::SCRELU_MIN, arch::SCRELU_MAX>(next.data, network_.l2.weights[1 * arch::HIDDEN]);
+//     score += ops::screlu_dot<arch::HIDDEN, arch::SCRELU_MIN, arch::SCRELU_MAX>(ally.data, network_.l2.weights[2 * arch::HIDDEN]);
+//     score += ops::screlu_dot<arch::HIDDEN, arch::SCRELU_MIN, arch::SCRELU_MAX>(prev.data, network_.l2.weights[3 * arch::HIDDEN]);
 
-//     score += screlu_dot<A1>(stack_.self(stm).data(), network_.w2[0 * A1]);
-//     score += screlu_dot<A1>(stack_.next(stm).data(), network_.w2[1 * A1]);
-//     score += screlu_dot<A1>(stack_.ally(stm).data(), network_.w2[2 * A1]);
-//     score += screlu_dot<A1>(stack_.prev(stm).data(), network_.w2[3 * A1]);
-
-//     // Match the Rust quantisation path
-//     // (adjust constants to the exact QA/QB/SCALE you trained with)
-//     score /= QA;                          // remove one QA from the SCReLU square
-//     score += network_.b2[0];              // output bias (int16 → int32)
-//     score *= SCALE;                       // final eval scale (usually 400 or similar)
-//     score /= (QA * QB);                   // remove remaining quantisation
+//     score += network_.l2.biases[0];
+//     score *= arch::SCALE;
+//     score /= (arch::QA * arch::QA * arch::QB);
 
 //     return score;
 // }
 
-} // namespace athena
+// } // namespace athena

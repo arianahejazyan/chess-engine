@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "engine.h"
 
-namespace athena::uci {
+namespace athena {
 
 class UCIEngine {
 public:
@@ -13,8 +13,6 @@ public:
     void run(int argc, char** argv);
 
 private:
-    void register_commands();
-
     // UCI Commands
     void uci(std::istream& is);
     void isready(std::istream& is);
@@ -31,11 +29,13 @@ private:
     void eval(std::istream& is);
     void perft(std::istream& is);
     void print(std::istream& is);
+    void ponderhit(std::istream& is);
 
     // Helper Functinos
-    Search::Limits parse_limits(std::istream&);
+    void register_commands();
+//     Search::Limits parse_limits(std::istream&);
 
-    Engine engine_;
+    Engine engine;
     std::unordered_map<std::string, std::function<void(std::istream&)>> commands_;
 };
 

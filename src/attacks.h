@@ -1,13 +1,10 @@
 #pragma once
 
 #include "bitboard.h"
-#include "chess/constants.h"
-#include "square.h"
-#include "color.h"
-#include "piece.h"
+#include "chess.h"
 #include <cstdint>
 
-namespace athena::chess {
+namespace athena {
 
 // [main, anti] diagonal bishop attacks
 alignas(64) extern const 

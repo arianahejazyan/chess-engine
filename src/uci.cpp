@@ -1,12 +1,13 @@
-#include "uci/uci.h"
+#include <syncstream>
+#include <string>
 #include <sstream>
-#include <vector>
-#include "chess/position.h"
-#include "nnue/nnue.h"
-#include "uci/uci.h"
+// #include <vector>
+// #include "chess/position.h"
+// #include "nnue/nnue.h"
+#include "uci.h"
 #include "misc.h"
 
-namespace athena::uci {
+namespace athena {
 
 UCIEngine::UCIEngine() {
     register_commands();
@@ -27,6 +28,7 @@ void UCIEngine::register_commands() {
     commands_["load"]       = [this](std::istream& is) { load(is); };
     commands_["save"]       = [this](std::istream& is) { save(is); };
     commands_["eval"]       = [this](std::istream& is) { eval(is); };
+    commands_["ponderhit"]  = [this](std::istream& is) { ponderhit(is); };
 }
 
 void UCIEngine::run(int argc, char** argv) {
@@ -37,8 +39,6 @@ void UCIEngine::run(int argc, char** argv) {
         std::string arg = argv[1];
         if (arg == "--help" || arg == "-h") {
             std::cout
-                << "Athena " << misc::version() << "\n"
-                << "A free uci-compatible 4-player chess engine.\n"
                 << "For full documentation, read the README.md file or visit the GitHub page: "
                 << misc::github() 
                 << std::endl;
@@ -76,16 +76,20 @@ void UCIEngine::run(int argc, char** argv) {
 }
 
 void UCIEngine::uci(std::istream&) {
-    std::cout << "id name Athena " << misc::version() << "\n";
-    std::cout << "id author " << misc::author() << "\n";
-    std::cout << "uciok" << std::endl;
+    std::osyncstream(std::cout) 
+        << "id name Athena " << misc::version() << '\n'
+        << "id author " << misc::author() << '\n'
+        << engine.get_options()
+        << "uciok" 
+        << std::endl;
 }
 
 void UCIEngine::isready(std::istream&) {
-    std::cout << "readyok" << std::endl;
+    std::osyncstream(std::cout) << "readyok" << std::endl;
 }
 
-void UCIEngine::setoption(std::istream&) {
+void UCIEngine::setoption(std::istream& is) {
+    engine.get_options().setoption(is);
 }
 
 void UCIEngine::ucinewgame(std::istream&) {
@@ -100,7 +104,7 @@ void UCIEngine::position(std::istream& is) {
         is >> token;
         fen = token;
     } else {
-        fen = chess::Position::startpos(token);
+        fen = Position::startpos(token);
     }
 
     std::vector<std::string> moves;
@@ -108,58 +112,61 @@ void UCIEngine::position(std::istream& is) {
         while (is >> token) moves.push_back(token);
     }
 
-    engine_.set_position(fen, moves);
+    engine.set_position(fen, moves);
 }
 
 void UCIEngine::go(std::istream& is) {
-    Search::Limits limits = parse_limits(is);
-    engine_.go(limits);
+    // Search::Limits limits = parse_limits(is);
+    // engine_.go(limits);
 }
 
 void UCIEngine::stop(std::istream&) {
-    engine_.stop();
+    // engine_.stop();
 }
 
 void UCIEngine::quit(std::istream&) {
-    engine_.stop();
+    // engine_.stop();
 }
 
 void UCIEngine::load(std::istream& is) {
-    std::string bin;
-    is >> bin;
-    engine_.load(bin);
+    // std::string bin;
+    // is >> bin;
+    // engine_.load(bin);
 }
 
 void UCIEngine::save(std::istream& is) {
-    std::string bin;
-    is >> bin;
-    engine_.save(bin);
+    // std::string bin;
+    // is >> bin;
+    // engine_.save(bin);
 }
 
 void UCIEngine::eval(std::istream&) {
-    std::cout << engine_.evaluate() << std::endl;
+    // std::cout << engine_.evaluate() << std::endl;
 }
 
 void UCIEngine::perft(std::istream& is) {
     int depth;
     is >> depth;
-    engine_.perft(depth);
+    engine.perft(depth);
 }
 
 void UCIEngine::print(std::istream&) {
-    engine_.print(false);
+    engine.print(false);
 }
 
-Search::Limits UCIEngine::parse_limits(std::istream& is) {
+void UCIEngine::ponderhit(std::istream&) {
+}
 
-    Search::Limits limits;
-    std::string token;
+// Search::Limits UCIEngine::parse_limits(std::istream& is) {
 
-    while (is >> token)
-        if (token == "depth")
-            is >> limits.maxDepth;
+//     Search::Limits limits;
+//     std::string token;
+
+//     while (is >> token)
+//         if (token == "depth")
+//             is >> limits.maxDepth;
  
-    return limits;
-}
+//     return limits;
+// }
 
 } // namespace athena

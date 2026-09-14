@@ -1,9 +1,9 @@
 #pragma once
 
-#include "move.h"
+#include "chess.h"
 #include "position.h"
 
-namespace athena::chess {
+namespace athena {
 
 [[nodiscard]] int generate_noisy_moves(Position& pos, Move* moves) noexcept;
 [[nodiscard]] int generate_quiet_moves(Position& pos, Move* moves) noexcept;

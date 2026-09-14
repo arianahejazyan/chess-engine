@@ -1,14 +1,9 @@
 #pragma once
 
-#include "constants.h"
-#include "move.h"
-#include "piececolor.h"
+#include "chess.h"
 #include "bitboard.h"
-#include "square.h"
-#include "castle.h"
-#include <cstdint>
 
-namespace athena::chess {
+namespace athena {
 
 class alignas(64) Position {
 public:
@@ -170,5 +165,25 @@ public:
         return STARTPOS[setup == "modern" ? 0 : 1];
     }
 };
+
+// class AccumulatorStack {
+//     public:
+//         void push() noexcept { ++play_; std::memcpy(accumulators_[play_], accumulators_[play_ - 1], sizeof(accumulators_[play_])); }
+//         void pop()  noexcept { --play_; }
+    
+//         Accumulator& operator[](chess::Color color) noexcept {
+//             return accumulators_[play_][color.id()];
+//         }
+    
+//         const Accumulator& self(chess::Color turn) const noexcept { return accumulators_[play_][turn.self().id()]; }
+//         const Accumulator& next(chess::Color turn) const noexcept { return accumulators_[play_][turn.next().id()]; }
+//         const Accumulator& ally(chess::Color turn) const noexcept { return accumulators_[play_][turn.ally().id()]; }
+//         const Accumulator& prev(chess::Color turn) const noexcept { return accumulators_[play_][turn.prev().id()]; }
+    
+//     private:
+//         int play_ = 0; // chess::Position::Play
+//         alignas(64) Accumulator accumulators_[chess::PLAY_NB][chess::COLOR_NB];
+//     };
+    
 
 } // namespace athena

@@ -1,11 +1,8 @@
 #include "attacks.h"
-#include "bitboard.h"
-#include "constants.h"
-#include "square.h"
 
-namespace athena::chess {
+namespace athena {
 
-consteval auto bitboard(
+constexpr auto bitboard(
     Square sq, Square::Offset offset, bool slide) {
     Bitboard bb{0ULL};
     sq += offset;
@@ -18,7 +15,7 @@ consteval auto bitboard(
 }
 
 alignas(64) 
-constexpr std::array<std::pair<Bitboard, Bitboard>, VALID_NB> 
+extern constexpr std::array<std::pair<Bitboard, Bitboard>, VALID_NB> 
 PRECOMPUTED_TABLE_DIAGONAL = []() consteval {
     std::array<std::pair<Bitboard, Bitboard>, VALID_NB> table{};
     const auto offsets = Square::offsets<Piece::ID::Bishop>();
@@ -32,7 +29,7 @@ PRECOMPUTED_TABLE_DIAGONAL = []() consteval {
 }();
 
 alignas(64) 
-constexpr std::array<std::pair<Bitboard, Bitboard>, VALID_NB> 
+extern constexpr std::array<std::pair<Bitboard, Bitboard>, VALID_NB> 
 PRECOMPUTED_TABLE_STRAIGHT = []() consteval {
     std::array<std::pair<Bitboard, Bitboard>, VALID_NB> table{};
     const auto offsets = Square::offsets<Piece::ID::Rook>();
@@ -46,7 +43,7 @@ PRECOMPUTED_TABLE_STRAIGHT = []() consteval {
 }();
 
 alignas(64) 
-constexpr std::array<std::pair<Bitboard, Bitboard>, VALID_NB>
+extern constexpr std::array<std::pair<Bitboard, Bitboard>, VALID_NB>
 PRECOMPUTED_TABLE_CRAWL = []() consteval {
     std::array<std::pair<Bitboard, Bitboard>, VALID_NB> table{};
     const auto offsets_1 = Square::offsets<Piece::ID::King  >();
@@ -62,7 +59,7 @@ PRECOMPUTED_TABLE_CRAWL = []() consteval {
 
 
 alignas(64) 
-constexpr std::array<std::array<Bitboard, COLOR_NB>, VALID_NB> 
+extern constexpr std::array<std::array<Bitboard, COLOR_NB>, VALID_NB> 
 PRECOMPUTED_TABLE_PAWN = []() consteval {
     std::array<std::array<Bitboard, COLOR_NB>, VALID_NB>  table{};
     for (int s = 0; s < SQUARE_NB; s++) {
@@ -113,7 +110,7 @@ PRECOMPUTED_TABLE_PAWN = []() consteval {
 // }();
 
 alignas(64)
-constexpr std::array<std::array<std::pair<Bitboard, Bitboard>, VALID_NB>, VALID_NB>
+extern constexpr std::array<std::array<std::pair<Bitboard, Bitboard>, VALID_NB>, VALID_NB>
 PRECOMPUTED_TABLE_THROUGH_BETWEEN = []() consteval {
     std::array<std::array<std::pair<Bitboard, Bitboard>, VALID_NB>, VALID_NB> table{};
     for (int s1 = 0; s1 < SQUARE_NB; s1++) {

@@ -5,9 +5,9 @@
 #include <string>
 #include <cstdlib>
 #include <climits>
-#include "chess/position.h"
-#include "chess/castle.h"
-#include "chess/perft.h"
+#include "chess.h"
+#include "position.h"
+#include "perft.h"
 
 using namespace athena;
 
@@ -17,7 +17,7 @@ struct PerftCase {
     int depth = 0;
     uint64_t expected = 0;
     std::string fen;
-    chess::Castle::Setup setup;
+    Castle::Setup setup;
 };
 
 std::ostream& operator<<(std::ostream& os, const PerftCase& tc) {
@@ -73,9 +73,9 @@ std::vector<PerftCase> LoadCases(const std::string& path)
 
         // setup mapping
         if (tc.setupName == "modern")
-            tc.setup = chess::Castle::Setup::Modern;
+            tc.setup = Castle::Setup::Modern;
         else if (tc.setupName == "classic")
-            tc.setup = chess::Castle::Setup::Classic;
+            tc.setup = Castle::Setup::Classic;
         else
             throw std::runtime_error("Unknown setup: " + tc.setupName);
 
@@ -109,11 +109,11 @@ TEST_P(PerftTest, NodeCount) {
     if (tc.depth > maxDepth)
         GTEST_SKIP() << "Filtered by MAX_DEPTH=" << maxDepth;
 
-    chess::Position pos;
+    Position pos;
     pos.set_setup(tc.setup);
     pos.init(tc.fen);
 
-    uint64_t actual = chess::perft(pos, tc.depth);
+    uint64_t actual = perft::perft(pos, tc.depth);
 
     EXPECT_EQ(actual, tc.expected)
         << "setup=" << tc.setupName << " "

@@ -1,16 +1,16 @@
 #pragma once
 
 #include <cstdint>
-#include "chess/position.h"
-#include "chess/movegen.h"
+#include "position.h"
+#include "movegen.h"
 
-namespace athena::chess {
+namespace athena::perft {
 
-inline uint64_t perft(chess::Position& pos, int depth) {
+inline uint64_t perft(Position& pos, int depth) {
 
     if (depth == 0) return 1;
 
-    chess::Move moves[chess::MOVE_NB];
+    Move moves[MOVE_NB];
     int num_moves = generate_legal_moves(pos, moves);
 
     if (depth == 1)

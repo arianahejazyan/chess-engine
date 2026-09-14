@@ -1,15 +1,9 @@
 #include "movegen.h"
 #include "attacks.h"
 #include "bitboard.h"
-#include "castle.h"
-#include "chess/constants.h"
-#include "chess/square.h"
-#include "move.h"
-#include "piece.h"
-#include "piececolor.h"
 #include "position.h"
 
-namespace athena::chess {
+namespace athena {
 
 Move* add_evolve_moves(const Position& pos, Move* moves, Square source, Square target, Color::ID color, Color::ID enpass = Color::ID::None) noexcept {
     

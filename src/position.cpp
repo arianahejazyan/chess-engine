@@ -6,18 +6,11 @@
 #include <iomanip>
 #include <cstring>
 #include "position.h"
-#include "castle.h"
-#include "chess/bitboard.h"
-#include "chess/constants.h"
-#include "chess/piececolor.h"
-#include "color.h"
-#include "move.h"
-#include "piece.h"
-#include "square.h"
-#include "position.h"
+#include "chess.h"
+#include "bitboard.h"
 #include "attacks.h"
 
-namespace athena::chess {
+namespace athena {
 
 void Position::set_board(Square sq, PieceColor pc) noexcept {
     board_[static_cast<uint8_t>(sq.id())] = pc;
